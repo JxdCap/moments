@@ -1,11 +1,12 @@
 import { FormEvent, useState } from 'react';
-import type { CommentInput } from '../types/moment';
+import type { CommentInput, MomentComment } from '../types/moment';
 import { validateComment } from '../utils/commentValidation';
+import { loadCommentIdentity, saveCommentIdentity } from '../utils/commentIdentity';
 import styles from './MomentCard.module.css';
 
 type CommentFormProps = {
-  onSubmit: (input: Omit<CommentInput, 'postId'>) => Promise<unknown>;
-  onSuccess?: () => void;
+  onSubmit: (input: Omit<CommentInput, 'postId'>) => Promise<MomentComment>;
+  onSuccess?: (comment: MomentComment) => void;
 };
 
 const initialForm = {
@@ -16,7 +17,7 @@ const initialForm = {
 };
 
 export const CommentForm = ({ onSubmit, onSuccess }: CommentFormProps) => {
-  const [form, setForm] = useState(initialForm);
+  const [form, setForm] = useState(() => ({ ...initialForm, ...loadCommentIdentity() }));
   const [message, setMessage] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -33,10 +34,10 @@ export const CommentForm = ({ onSubmit, onSuccess }: CommentFormProps) => {
     setMessage(null);
 
     try {
-      await onSubmit(form);
-      setForm(initialForm);
-      setMessage('评论已提交，若开启审核会在通过后显示。');
-      onSuccess?.();
+      const comment = await onSubmit(form);
+      saveCommentIdentity(form);
+      setForm({ ...loadCommentIdentity(), content: '' });
+      onSuccess?.(comment);
     } catch (caught) {
       setMessage(caught instanceof Error ? caught.message : '评论提交失败');
     } finally {

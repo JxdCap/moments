@@ -1,4 +1,4 @@
-import { CSSProperties, useState } from 'react';
+import { CSSProperties, useEffect, useState } from 'react';
 import { CommentForm } from './CommentForm';
 import { EditPostDialog } from './EditPostDialog';
 import { Lightbox } from './Lightbox';
@@ -116,6 +116,7 @@ export const MomentCard = ({ post, isOwner, onSave, onDelete, onTogglePinned, on
   const [isBusy, setIsBusy] = useState(false);
   const [isActionMenuOpen, setIsActionMenuOpen] = useState(false);
   const [isCommenting, setIsCommenting] = useState(false);
+  const [commentNotice, setCommentNotice] = useState<string | null>(null);
   const [previewIndex, setPreviewIndex] = useState<number | null>(null);
   const { comments, error, isLoading, submit } = useComments(post.id);
   const visitorLikeCount = post.hasLiked ? post.likeCount - 1 : post.likeCount;
@@ -152,10 +153,20 @@ export const MomentCard = ({ post, isOwner, onSave, onDelete, onTogglePinned, on
 
   const handleComment = () => {
     setIsActionMenuOpen(false);
+    setCommentNotice(null);
     setIsCommenting(true);
   };
 
-  const showSocialBox = post.likeCount > 0 || comments.length > 0 || isLoading || error;
+  useEffect(() => {
+    if (!commentNotice) {
+      return;
+    }
+
+    const timeout = window.setTimeout(() => setCommentNotice(null), 4200);
+    return () => window.clearTimeout(timeout);
+  }, [commentNotice]);
+
+  const showSocialBox = post.likeCount > 0 || comments.length > 0 || isLoading || error || commentNotice;
 
   return (
     <article className={styles.card}>
@@ -238,6 +249,7 @@ export const MomentCard = ({ post, isOwner, onSave, onDelete, onTogglePinned, on
 
             {isLoading ? <p className={styles.state}>评论加载中...</p> : null}
             {error ? <p className={styles.state}>{error}</p> : null}
+            {commentNotice ? <p className={`${styles.state} ${styles.success}`}>{commentNotice}</p> : null}
 
             {comments.length > 0 ? (
               <div className={styles.commentList}>
@@ -262,7 +274,15 @@ export const MomentCard = ({ post, isOwner, onSave, onDelete, onTogglePinned, on
               </div>
             ) : null}
 
-            {isCommenting ? <CommentForm onSubmit={submit} onSuccess={() => setIsCommenting(false)} /> : null}
+            {isCommenting ? (
+              <CommentForm
+                onSubmit={submit}
+                onSuccess={(comment) => {
+                  setCommentNotice(comment.status === 'approved' ? '评论已贴上来。' : '收到，审核后会在这里出现。');
+                  setIsCommenting(false);
+                }}
+              />
+            ) : null}
           </section>
         ) : null}
       </div>

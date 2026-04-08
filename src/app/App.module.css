@@ -103,6 +103,137 @@
   background: #ffffff;
 }
 
+.timelineTools {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: grid;
+  gap: 9px;
+  border-bottom: 1px solid var(--hairline);
+  background: rgb(255 255 255 / 96%);
+  padding: 10px 12px;
+  backdrop-filter: blur(10px);
+}
+
+.modeSwitch {
+  display: inline-flex;
+  justify-self: start;
+  overflow: hidden;
+  border: 1px solid #dce1ea;
+  border-radius: 7px;
+  background: #f5f6f8;
+}
+
+.modeSwitch button {
+  border: 0;
+  background: transparent;
+  color: #5f6878;
+  padding: 5px 13px;
+  font-size: 13px;
+}
+
+.modeSwitch button + button {
+  border-left: 1px solid #dce1ea;
+}
+
+.modeSwitch .activeMode {
+  background: #ffffff;
+  color: #2f6f52;
+  font-weight: 600;
+}
+
+.tagFilter {
+  display: flex;
+  gap: 7px;
+  overflow-x: auto;
+  padding-bottom: 1px;
+  scrollbar-width: none;
+}
+
+.tagFilter::-webkit-scrollbar {
+  display: none;
+}
+
+.tagFilter button {
+  flex: 0 0 auto;
+  border: 1px solid #dce1ea;
+  border-radius: 999px;
+  background: #ffffff;
+  color: var(--wechat-link);
+  padding: 4px 10px;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.tagFilter .activeTag {
+  border-color: rgb(47 111 82 / 34%);
+  background: #edf6f1;
+  color: #2f6f52;
+  font-weight: 600;
+}
+
+.album {
+  border-bottom: 1px solid var(--hairline);
+  background: #ffffff;
+  padding: 12px;
+}
+
+.albumHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 9px;
+  color: var(--muted);
+}
+
+.albumHeader p {
+  margin: 0;
+  color: #1f2329;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.albumHeader span {
+  font-size: 12px;
+}
+
+.albumGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 4px;
+}
+
+.albumItem {
+  position: relative;
+  overflow: hidden;
+  border: 0;
+  background: #f2f3f5;
+  padding: 0;
+  aspect-ratio: 1;
+}
+
+.albumItem img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.albumItem span {
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+  max-width: calc(100% - 8px);
+  overflow: hidden;
+  border-radius: 4px;
+  background: rgb(0 0 0 / 36%);
+  color: rgb(255 255 255 / 86%);
+  padding: 2px 5px;
+  font-size: 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .state {
   padding: 42px 24px;
   color: var(--muted);
@@ -144,5 +275,9 @@
 
   .form {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto auto;
+  }
+
+  .timelineTools {
+    padding: 12px 15px;
   }
 }

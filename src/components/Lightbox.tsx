@@ -48,6 +48,9 @@ export const Lightbox = ({ images, activeIndex, onChange, onClose }: LightboxPro
       <div className={styles.counter}>
         {activeIndex + 1} / {images.length}
       </div>
+      <a className={styles.original} href={image.url} target="_blank" rel="noreferrer">
+        原图
+      </a>
       <img className={styles.image} src={image.url} alt={image.alt ?? ''} />
       {canGoPrevious ? (
         <button

@@ -30,10 +30,12 @@ export const useComments = (postId: string) => {
         ...input,
         postId,
       });
-      await refresh();
+      if (comment.status === 'approved') {
+        setComments((current) => (current.some((item) => item.id === comment.id) ? current : [...current, comment]));
+      }
       return comment;
     },
-    [postId, refresh],
+    [postId],
   );
 
   return {

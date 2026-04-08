@@ -417,6 +417,10 @@
   font-size: 12px;
 }
 
+.success {
+  color: #2f6f52;
+}
+
 .commentList {
   display: grid;
   gap: 4px;
