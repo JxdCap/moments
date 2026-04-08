@@ -1,0 +1,50 @@
+.card {
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr);
+  gap: 10px;
+  width: min(100%, 320px);
+  padding: 8px;
+  background: #f3f4f6;
+}
+
+.card img,
+.cover {
+  width: 52px;
+  height: 52px;
+  border-radius: 6px;
+  object-fit: cover;
+  background: #2b3340;
+  color: #ffffff;
+}
+
+.cover {
+  display: grid;
+  place-items: center;
+  font-size: 22px;
+}
+
+.text {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+}
+
+.text strong,
+.text small,
+.text em {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.text small,
+.text em {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.text em {
+  font-style: normal;
+}

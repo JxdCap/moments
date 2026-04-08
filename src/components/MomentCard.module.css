@@ -1,0 +1,86 @@
+.card {
+  display: grid;
+  grid-template-columns: 46px minmax(0, 1fr);
+  gap: 10px;
+  padding: 18px 14px 16px;
+  border-bottom: 1px solid var(--hairline);
+  background: #ffffff;
+}
+
+.authorAvatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 6px;
+  background: #2f6f52;
+  color: #ffffff;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+}
+
+.body {
+  min-width: 0;
+}
+
+.topLine {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 5px;
+}
+
+.author {
+  margin: 0;
+  color: var(--wechat-link);
+  font-size: 16px;
+  line-height: 1.25;
+}
+
+.pinned {
+  border: 1px solid #e6a23c;
+  border-radius: 4px;
+  color: #9a5a00;
+  background: #fff7e8;
+  padding: 1px 5px;
+  font-size: 12px;
+}
+
+.content {
+  margin: 0 0 10px;
+  white-space: pre-wrap;
+  line-height: 1.55;
+  font-size: 15px;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+  color: var(--wechat-link);
+  font-size: 13px;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.ownerActions {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.ownerActions button {
+  border: 0;
+  border-radius: 5px;
+  background: #f0f2f5;
+  color: var(--wechat-link);
+  padding: 5px 9px;
+  font-size: 12px;
+}

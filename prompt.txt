@@ -1,0 +1,125 @@
+当前目录是一个空项目。请从零开始搭建一个可运行的浏览器端单页面个人朋友圈网站，技术栈固定为 React + Vite + TypeScript + 原生 CSS Modules + PocketBase。不要使用 Tailwind，不要使用 shadcn，不要使用任何 UI 组件库，不要改成多页面，不要改成 SSR，不要引入与需求无关的后台系统。
+
+先完成项目初始化与基础工程搭建：创建 package.json、Vite 配置、TypeScript 配置、src 目录、基础样式文件、README，并保证 npm install 后可正常 npm run dev、npm run build。Vite 是浏览器端构建工具，生产构建以 index.html 为入口，因此项目按标准 Vite Web SPA 结构组织即可。React 负责组件化拆分。完成后至少执行一次可验证检查，如 npm run build。 
+
+产品目标：做一个“浏览器直接打开”的单页面个人朋友圈网页，视觉、信息布局、交互节奏尽量对齐官方微信朋友圈，但产品边界以本任务为准。
+
+一、产品边界
+1. 单页面应用（SPA），主页面就是朋友圈时间流。
+2. 单用户站点：只有站长本人管理内容；不做普通用户注册/登录体系。
+3. 游客不能登录，但可以发表评论/留言；评论头像使用 Gravatar。
+4. 网页端不做发布窗口；发布由 iOS 快捷指令通过外部接口完成。
+5. 网页端作者只需要编辑、删除、置顶/取消置顶能力。
+6. 在官方朋友圈基础上，额外增加 tags，用于后期搜索/筛选。
+7. 内容类型支持：图文、视频、文章卡片、置顶；音乐只预留数据结构与渲染占位，不做复杂播放器。
+8. 不做公开点赞功能；保留评论功能。
+
+二、技术与安全约束
+1. 使用 React + Vite + TypeScript。
+2. 样式使用原生 CSS / CSS Modules。
+3. PocketBase 作为数据层。
+4. 不要把 PocketBase superuser 凭证放进公开前端。
+5. 若需要网页端作者登录，请单独设计 owner/auth 方案，不要做普通用户系统。
+6. 代码必须模块化，不要把主要逻辑堆在 App.tsx 一个文件里。
+
+三、核心功能
+A. 时间流
+1. 单列时间流页面。
+2. 排序：置顶优先，其次发布时间倒序。
+3. tags 轻量展示。
+
+B. 动态类型
+1. 图文动态：正文 + 多图，九宫格布局尽量接近官方。
+2. 视频动态：正文 + 单视频，显示封面、时长，支持点击播放/预览。
+3. 文章卡片动态：正文 + 文章卡片（标题、摘要、封面、来源、链接）。
+4. 置顶动态：支持置顶/取消置顶；若实现更稳，可限制最多一条置顶。
+5. 音乐：预留字段与轻量占位，不做复杂播放器。
+
+C. 评论系统
+1. 游客可评论，不登录。
+2. 评论表单字段：昵称、邮箱、网址（可空）、评论内容。
+3. 使用 Gravatar；邮箱不在公开界面展示。
+4. 评论列表展示：头像、昵称、内容、时间、网址（如有）。
+5. 评论提交逻辑要预留基本防滥发能力：长度校验、频率限制接口位、后端可扩展校验位。
+
+D. 作者能力
+1. 作者登录后，动态卡片上可见编辑、删除、置顶/取消置顶操作。
+2. 游客不可见这些按钮。
+3. 不做网页发布能力。
+4. 编辑使用轻量方式即可（弹层或内联编辑）。
+
+四、PocketBase 数据模型建议
+1. posts：
+- type
+- content
+- images
+- video
+- video_cover
+- video_duration
+- article_title
+- article_desc
+- article_url
+- article_cover
+- article_site
+- music_title
+- music_artist
+- music_url
+- music_cover
+- music_source
+- tags
+- is_pinned
+- pinned_at
+- published_at
+- updated_at
+- source
+
+2. comments：
+- post
+- name
+- email
+- gravatar_hash
+- website
+- content
+- status
+- created
+
+3. owners（若需要网页端作者登录）：
+- email
+- password
+- role
+
+五、目录与组织要求
+请从零创建清晰目录，至少包括：
+- src/app
+- src/components
+- src/hooks
+- src/services
+- src/types
+- src/utils
+- src/styles
+
+要求：
+1. 图片/媒体布局算法单独抽出，不要直接写死在 JSX。
+2. 评论逻辑单独抽出。
+3. App.tsx 保持轻，主要做页面装配。
+4. 样式按全局样式 + 组件模块样式拆分。
+
+六、交付要求
+1. 从空目录直接初始化并落地完整第一版骨架与可运行页面。
+2. 完成后执行至少一次 npm run build。
+3. 输出时明确汇报：
+- 新建了哪些文件
+- 当前已完成的功能
+- 暂未完成但已预留的部分
+- 构建结果
+- iOS 快捷指令后续应对接哪个接口文件/服务层
+
+七、禁止事项
+1. 不要引入 Tailwind、shadcn、Ant Design、MUI、Chakra 等 UI 框架。
+2. 不要改造成 Next.js、Nuxt、SSR、全栈博客系统。
+3. 不要加入多用户关系、公开点赞、私信、好友系统。
+4. 不要实现与需求无关的管理后台大面板。
+5. 不要为了省事把大部分逻辑糊成少数几个超长文件。
+6. 不要把 PocketBase superuser 凭证放进公开前端。
+
+请直接在当前空目录从零搭建，优先产出一个可运行、可构建、结构清晰、样式尽量贴近官方朋友圈的第一版。

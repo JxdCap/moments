@@ -1,0 +1,75 @@
+import type { MomentComment, MomentPost } from '../types/moment';
+import { getGravatarHash } from '../utils/gravatar';
+
+export const demoPosts: MomentPost[] = [
+  {
+    id: 'demo-pinned',
+    type: 'article',
+    content: '把这里当作个人朋友圈的公开时间线。短句、照片、链接和偶尔的视频，都按时间自然落下来。',
+    images: [],
+    articleTitle: '第一版项目骨架已就绪',
+    articleDesc: 'React + Vite + TypeScript + CSS Modules + PocketBase 数据层。',
+    articleUrl: 'https://pocketbase.io/docs/',
+    articleCover: 'https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=640&q=80',
+    articleSite: 'PocketBase',
+    tags: ['置顶', '项目'],
+    isPinned: true,
+    pinnedAt: '2026-04-08T10:00:00.000Z',
+    publishedAt: '2026-04-08T10:00:00.000Z',
+    source: 'web',
+  },
+  {
+    id: 'demo-images',
+    type: 'image',
+    content: '傍晚出门，光线刚好。九宫格会根据图片数量调整列数，避免把布局写死在 JSX 里。',
+    images: [
+      { url: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=500&q=80', alt: '黄昏街景' },
+      { url: 'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=500&q=80', alt: '山谷' },
+      { url: 'https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=500&q=80', alt: '湖面' },
+      { url: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=500&q=80', alt: '星空' },
+      { url: 'https://images.unsplash.com/photo-1493246507139-91e8fad9978e?auto=format&fit=crop&w=500&q=80', alt: '森林' },
+      { url: 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=500&q=80', alt: '公路' },
+    ],
+    tags: ['照片', '生活'],
+    isPinned: false,
+    publishedAt: '2026-04-07T11:40:00.000Z',
+    source: 'ios-shortcuts',
+  },
+  {
+    id: 'demo-video',
+    type: 'video',
+    content: '视频先走轻量预览，点击后在原位置播放。',
+    images: [],
+    video: 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4',
+    videoCover: 'https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=800&q=80',
+    videoDuration: 12,
+    tags: ['视频'],
+    isPinned: false,
+    publishedAt: '2026-04-06T08:12:00.000Z',
+  },
+  {
+    id: 'demo-music',
+    type: 'music',
+    content: '音乐先保留数据结构和卡片占位，不做播放器。',
+    images: [],
+    musicTitle: 'Late Night Draft',
+    musicArtist: 'Site Owner',
+    musicSource: 'Local Note',
+    tags: ['音乐', '占位'],
+    isPinned: false,
+    publishedAt: '2026-04-05T14:20:00.000Z',
+  },
+];
+
+export const demoComments: MomentComment[] = [
+  {
+    id: 'comment-1',
+    postId: 'demo-images',
+    name: '路过的访客',
+    gravatarHash: getGravatarHash('guest@example.com'),
+    website: 'https://example.com',
+    content: '这个照片布局很接近朋友圈的节奏。',
+    status: 'approved',
+    created: '2026-04-07T12:10:00.000Z',
+  },
+];
