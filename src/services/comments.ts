@@ -1,13 +1,23 @@
 import { pb } from './pocketbase';
 import { demoComments } from './demoData';
-import { mapCommentRecord } from './mappers';
-import type { CommentInput, MomentComment } from '../types/moment';
-import type { CommentRecord } from '../types/pocketbase';
+import type { CommentInput, CommentRecord, MomentComment } from '../types/moment';
 import { validateComment } from '../utils/commentValidation';
 import { getGravatarHash } from '../utils/gravatar';
 
 const submitTimestamps = new Map<string, number>();
 let localComments = [...demoComments];
+
+const mapCommentRecord = (record: CommentRecord): MomentComment => ({
+  id: record.id,
+  postId: record.post,
+  name: record.name,
+  email: record.email,
+  gravatarHash: record.gravatar_hash,
+  website: record.website,
+  content: record.content,
+  status: record.status ?? 'approved',
+  created: record.created,
+});
 
 export const listCommentsByPost = async (postId: string) => {
   if (!pb) {

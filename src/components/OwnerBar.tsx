@@ -1,6 +1,6 @@
 import { FormEvent, useState } from 'react';
 import type { useOwnerAuth } from '../hooks/useOwnerAuth';
-import styles from './OwnerBar.module.css';
+import styles from '../app/App.module.css';
 
 type OwnerBarProps = {
   ownerAuth: ReturnType<typeof useOwnerAuth>;

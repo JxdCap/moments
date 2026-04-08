@@ -1,6 +1,6 @@
 import { MomentCard } from './MomentCard';
 import type { usePosts } from '../hooks/usePosts';
-import styles from './Timeline.module.css';
+import styles from '../app/App.module.css';
 
 type TimelineProps = {
   postsState: ReturnType<typeof usePosts>;
@@ -37,6 +37,7 @@ export const Timeline = ({ postsState, isOwner }: TimelineProps) => {
           onSave={postsState.savePost}
           onDelete={postsState.removePost}
           onTogglePinned={postsState.togglePinned}
+          onToggleLike={postsState.toggleLike}
         />
       ))}
     </div>

@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import { applyPublicLikeState, togglePublicLike } from '../services/likes';
 import { deletePost, listPosts, setPostPinned, updatePost } from '../services/posts';
 import type { MomentPost, PostPatch } from '../types/moment';
 
@@ -12,7 +13,7 @@ export const usePosts = () => {
     setError(null);
 
     try {
-      setPosts(await listPosts());
+      setPosts(applyPublicLikeState(await listPosts()));
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : '动态加载失败');
     } finally {
@@ -48,6 +49,21 @@ export const usePosts = () => {
     [refresh],
   );
 
+  const toggleLike = useCallback(async (post: MomentPost) => {
+    const nextLike = await togglePublicLike(post);
+    setPosts((current) =>
+      current.map((item) =>
+        item.id === nextLike.postId
+          ? {
+              ...item,
+              likeCount: nextLike.likeCount,
+              hasLiked: nextLike.hasLiked,
+            }
+          : item,
+      ),
+    );
+  }, []);
+
   return {
     posts,
     isLoading,
@@ -56,5 +72,6 @@ export const usePosts = () => {
     savePost,
     removePost,
     togglePinned,
+    toggleLike,
   };
 };

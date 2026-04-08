@@ -10,6 +10,7 @@
   --hairline: #e7e9ee;
   --muted: #7b8494;
   --wechat-link: #576b95;
+  --tap-highlight: rgb(87 107 149 / 10%);
 }
 
 * {
@@ -20,6 +21,13 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+}
+
+body,
+button,
+input,
+textarea {
+  -webkit-tap-highlight-color: var(--tap-highlight);
 }
 
 button,

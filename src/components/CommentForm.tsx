@@ -1,10 +1,11 @@
 import { FormEvent, useState } from 'react';
 import type { CommentInput } from '../types/moment';
 import { validateComment } from '../utils/commentValidation';
-import styles from './CommentForm.module.css';
+import styles from './MomentCard.module.css';
 
 type CommentFormProps = {
   onSubmit: (input: Omit<CommentInput, 'postId'>) => Promise<unknown>;
+  onSuccess?: () => void;
 };
 
 const initialForm = {
@@ -14,7 +15,7 @@ const initialForm = {
   content: '',
 };
 
-export const CommentForm = ({ onSubmit }: CommentFormProps) => {
+export const CommentForm = ({ onSubmit, onSuccess }: CommentFormProps) => {
   const [form, setForm] = useState(initialForm);
   const [message, setMessage] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -35,6 +36,7 @@ export const CommentForm = ({ onSubmit }: CommentFormProps) => {
       await onSubmit(form);
       setForm(initialForm);
       setMessage('评论已提交，若开启审核会在通过后显示。');
+      onSuccess?.();
     } catch (caught) {
       setMessage(caught instanceof Error ? caught.message : '评论提交失败');
     } finally {
