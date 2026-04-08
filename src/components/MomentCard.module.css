@@ -234,26 +234,55 @@
 }
 
 .moreButton {
-  width: 29px;
+  position: relative;
+  width: 30px;
   height: 20px;
   border: 0;
-  border-radius: 3px;
-  background: #f0f2f5;
+  border-radius: 4px;
+  background: #eef1f5;
   color: var(--wechat-link);
-  line-height: 14px;
-  font-weight: 700;
+}
+
+.moreButton span,
+.moreButton::before,
+.moreButton::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #5d6f91;
+  transform: translateY(-50%);
+}
+
+.moreButton span {
+  left: 13px;
+}
+
+.moreButton::before {
+  left: 8px;
+}
+
+.moreButton::after {
+  right: 8px;
+}
+
+.moreButton[aria-expanded='true'] {
+  background: #dfe5ee;
 }
 
 .actionMenu {
   position: absolute;
-  right: 34px;
-  top: -6px;
+  right: 38px;
+  top: -7px;
   z-index: 3;
   display: flex;
   overflow: hidden;
-  border-radius: 4px;
-  background: #333842;
-  box-shadow: 0 6px 20px rgb(0 0 0 / 22%);
+  border-radius: 5px;
+  background: #30333a;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 20%);
+  animation: menuIn 120ms ease-out;
 }
 
 .actionMenu::after {
@@ -261,23 +290,72 @@
   position: absolute;
   right: -5px;
   top: 11px;
-  border-left: 6px solid #333842;
+  border-left: 6px solid #30333a;
   border-top: 5px solid transparent;
   border-bottom: 5px solid transparent;
 }
 
 .actionMenu button {
-  min-width: 58px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  min-width: 64px;
   border: 0;
   background: transparent;
   color: #ffffff;
-  padding: 8px 10px;
+  padding: 7px 11px;
   font-size: 13px;
+  line-height: 1.2;
   white-space: nowrap;
 }
 
+.actionMenu button span {
+  width: 14px;
+  color: #ffffff;
+  font-size: 14px;
+  line-height: 1;
+}
+
+.actionLikeIcon {
+  transform: translateY(-1px);
+}
+
+.actionCommentIcon {
+  position: relative;
+  height: 12px;
+  border: 1.5px solid rgb(255 255 255 / 92%);
+  border-radius: 3px;
+  transform: translateY(1px);
+}
+
+.actionCommentIcon::after {
+  content: '';
+  position: absolute;
+  right: 1px;
+  bottom: -4px;
+  width: 5px;
+  height: 5px;
+  border-right: 1.5px solid rgb(255 255 255 / 92%);
+  border-bottom: 1.5px solid rgb(255 255 255 / 92%);
+  background: #30333a;
+  transform: rotate(45deg);
+}
+
 .actionMenu button + button {
-  border-left: 1px solid rgb(255 255 255 / 16%);
+  border-left: 1px solid rgb(255 255 255 / 13%);
+}
+
+@keyframes menuIn {
+  from {
+    opacity: 0;
+    transform: translateX(4px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
 }
 
 .ownerActions {
@@ -298,9 +376,9 @@
 .comments {
   position: relative;
   margin-top: 8px;
-  background: #f3f4f6;
+  background: #f2f3f5;
   border-radius: 3px;
-  padding: 7px;
+  padding: 6px 8px;
 }
 
 .comments::before {
@@ -308,19 +386,29 @@
   position: absolute;
   top: -6px;
   left: 14px;
-  border-bottom: 6px solid #f3f4f6;
+  border-bottom: 6px solid #f2f3f5;
   border-left: 6px solid transparent;
   border-right: 6px solid transparent;
 }
 
 .likes {
+  display: flex;
+  align-items: flex-start;
+  gap: 5px;
   color: var(--wechat-link);
   font-size: 13px;
   line-height: 1.45;
 }
 
 .likes span {
-  margin-right: 5px;
+  margin-top: 1px;
+  color: #576b95;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.likes strong {
+  font-weight: 600;
 }
 
 .state {
@@ -331,27 +419,37 @@
 
 .commentList {
   display: grid;
-  gap: 7px;
+  gap: 4px;
+  margin-top: 5px;
+  padding-top: 5px;
+  border-top: 1px solid #e1e4ea;
+}
+
+.likes + .commentList,
+.likes + .state,
+.state + .commentList {
   margin-top: 6px;
 }
 
 .comment {
   display: grid;
-  grid-template-columns: 24px minmax(0, 1fr);
-  gap: 7px;
+  grid-template-columns: 18px minmax(0, 1fr);
+  gap: 6px;
+  align-items: start;
 }
 
 .comment img {
-  width: 24px;
-  height: 24px;
-  border-radius: 4px;
+  width: 18px;
+  height: 18px;
+  border-radius: 3px;
+  opacity: 0.72;
 }
 
 .comment p {
-  margin: 0 0 1px;
+  margin: 0;
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 5px;
   align-items: baseline;
 }
 
@@ -364,7 +462,7 @@
 
 .comment span {
   color: var(--muted);
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .comment div {
@@ -374,16 +472,16 @@
 .comment div div {
   color: #222833;
   font-size: 13px;
-  line-height: 1.42;
+  line-height: 1.45;
   white-space: pre-wrap;
 }
 
 .form {
   display: grid;
-  gap: 7px;
-  border-top: 1px solid #e4e7ed;
-  margin-top: 8px;
-  padding-top: 8px;
+  gap: 6px;
+  border-top: 1px solid #e1e4ea;
+  margin-top: 7px;
+  padding-top: 7px;
 }
 
 .row {
@@ -395,10 +493,10 @@
 .form input,
 .form textarea {
   width: 100%;
-  border: 1px solid #d7dce5;
+  border: 1px solid #d9dde5;
   border-radius: 4px;
-  background: #ffffff;
-  padding: 7px 8px;
+  background: #fbfbfc;
+  padding: 6px 7px;
   color: #1f2329;
   font-size: 13px;
 }
@@ -416,15 +514,16 @@
 
 .actions small {
   color: var(--muted);
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .actions button {
   border: 0;
-  border-radius: 5px;
-  background: #1f6f50;
+  border-radius: 4px;
+  background: #2f6f52;
   color: #ffffff;
-  padding: 6px 12px;
+  padding: 5px 12px;
+  font-size: 13px;
   white-space: nowrap;
 }
 

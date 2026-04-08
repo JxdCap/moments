@@ -50,17 +50,27 @@ export const Lightbox = ({ images, activeIndex, onChange, onClose }: LightboxPro
       </div>
       <img className={styles.image} src={image.url} alt={image.alt ?? ''} />
       {canGoPrevious ? (
-        <button type="button" className={`${styles.nav} ${styles.previous}`} onClick={() => onChange(activeIndex - 1)}>
-          上一张
+        <button
+          type="button"
+          className={`${styles.nav} ${styles.previous}`}
+          onClick={() => onChange(activeIndex - 1)}
+          aria-label="上一张"
+        >
+          <span aria-hidden="true">‹</span>
         </button>
       ) : null}
       {canGoNext ? (
-        <button type="button" className={`${styles.nav} ${styles.next}`} onClick={() => onChange(activeIndex + 1)}>
-          下一张
+        <button
+          type="button"
+          className={`${styles.nav} ${styles.next}`}
+          onClick={() => onChange(activeIndex + 1)}
+          aria-label="下一张"
+        >
+          <span aria-hidden="true">›</span>
         </button>
       ) : null}
-      <button type="button" className={styles.close} onClick={onClose}>
-        关闭
+      <button type="button" className={styles.close} onClick={onClose} aria-label="关闭">
+        <span aria-hidden="true">×</span>
       </button>
     </div>
   );

@@ -118,6 +118,14 @@ export const MomentCard = ({ post, isOwner, onSave, onDelete, onTogglePinned, on
   const [isCommenting, setIsCommenting] = useState(false);
   const [previewIndex, setPreviewIndex] = useState<number | null>(null);
   const { comments, error, isLoading, submit } = useComments(post.id);
+  const visitorLikeCount = post.hasLiked ? post.likeCount - 1 : post.likeCount;
+  const likeText = post.hasLiked
+    ? visitorLikeCount > 0
+      ? `你、${visitorLikeCount} 位访客`
+      : '你'
+    : post.likeCount > 0
+      ? `${post.likeCount} 位访客`
+      : '';
 
   const handleDelete = async () => {
     if (!window.confirm('确定删除这条动态吗？')) {
@@ -186,14 +194,18 @@ export const MomentCard = ({ post, isOwner, onSave, onDelete, onTogglePinned, on
               aria-label="打开操作菜单"
               aria-expanded={isActionMenuOpen}
             >
-              ...
+              <span aria-hidden="true" />
             </button>
             {isActionMenuOpen ? (
               <div className={styles.actionMenu}>
                 <button type="button" onClick={handleToggleLike} disabled={isBusy}>
+                  <span className={styles.actionLikeIcon} aria-hidden="true">
+                    {post.hasLiked ? '♡' : '♥'}
+                  </span>
                   {post.hasLiked ? '取消' : '赞'}
                 </button>
                 <button type="button" onClick={handleComment}>
+                  <span className={styles.actionCommentIcon} aria-hidden="true" />
                   评论
                 </button>
               </div>
@@ -219,9 +231,8 @@ export const MomentCard = ({ post, isOwner, onSave, onDelete, onTogglePinned, on
           <section className={styles.comments} aria-label="互动">
             {post.likeCount > 0 ? (
               <div className={styles.likes}>
-                <span>♡</span>
-                {post.hasLiked ? '你' : '访客'}
-                {post.likeCount > 1 ? `等 ${post.likeCount} 人觉得不错` : '觉得不错'}
+                <span aria-hidden="true">♥</span>
+                <strong>{likeText}</strong>
               </div>
             ) : null}
 
