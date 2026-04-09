@@ -1,9 +1,12 @@
 import { useEffect, useState } from 'react';
 import { OwnerBar } from '../components/OwnerBar';
 import { Timeline } from '../components/Timeline';
+import { getGravatarHash, getGravatarUrl } from '../utils/gravatar';
 import { useOwnerAuth } from '../hooks/useOwnerAuth';
 import { usePosts } from '../hooks/usePosts';
 import styles from './App.module.css';
+
+const ownerAvatarUrl = getGravatarUrl(getGravatarHash('mrjucn@qq.com'), 144);
 
 export const App = () => {
   const ownerAuth = useOwnerAuth();
@@ -31,21 +34,22 @@ export const App = () => {
         <header className={styles.cover} />
         <div className={styles.profileSection}>
           <div className={styles.profileInfo}>
-            <button
-              type="button"
-              className={styles.avatarButton}
-              onClick={() => setIsProfileOpen(true)}
-              aria-label="打开个人资料与作者入口"
-              aria-haspopup="dialog"
-              aria-expanded={isProfileOpen}
-            >
-              <div className={styles.avatar} aria-hidden="true">
-                朋
+            <div className={styles.profileHeaderRow}>
+              <div className={styles.profileText}>
+                <div className={styles.profileMeta}>个人记录</div>
+                <h1 className={styles.profileName}>枫叶 - JxdCap</h1>
+                <p className={styles.profileBio}>只记录真实发生的小事</p>
               </div>
-            </button>
-            <div className={styles.profileText}>
-              <h1 className={styles.profileName}>枫叶 - JxdCap</h1>
-              <p className={styles.profileBio}>只记录真实发生的小事</p>
+              <button
+                type="button"
+                className={styles.avatarButton}
+                onClick={() => setIsProfileOpen(true)}
+                aria-label="打开个人资料与作者入口"
+                aria-haspopup="dialog"
+                aria-expanded={isProfileOpen}
+              >
+                <img className={styles.avatar} src={ownerAvatarUrl} alt="枫叶头像" />
+              </button>
             </div>
           </div>
         </div>
@@ -59,9 +63,7 @@ export const App = () => {
           <div className={styles.profileCard}>
             <div className={styles.profileCardHeader}>
               <div className={styles.profileCardIdentity}>
-                <div className={styles.profileCardAvatar} aria-hidden="true">
-                  朋
-                </div>
+                <img className={styles.profileCardAvatar} src={ownerAvatarUrl} alt="枫叶头像" />
                 <div>
                   <p className={styles.profileCardName}>枫叶 - JxdCap</p>
                   <p className={styles.profileCardBio}>只记录真实发生的小事</p>

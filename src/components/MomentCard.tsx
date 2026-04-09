@@ -1,4 +1,4 @@
-import { CSSProperties, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Heart, Star, MapPin, MessageCircle, MoreHorizontal, Play, FileText, Music, Pin } from 'lucide-react';
 import { CommentForm } from './CommentForm';
 import { EditPostDialog } from './EditPostDialog';
@@ -6,7 +6,7 @@ import { Lightbox } from './Lightbox';
 import { useComments } from '../hooks/useComments';
 import type { MomentMedia, MomentPost, PostPatch } from '../types/moment';
 import { formatDuration, formatMomentTime } from '../utils/date';
-import { getGravatarUrl } from '../utils/gravatar';
+import { getGravatarHash, getGravatarUrl } from '../utils/gravatar';
 import styles from './MomentCard.module.css';
 
 type MomentCardProps = {
@@ -20,47 +20,58 @@ type MomentCardProps = {
   onToggleFavorite: (postId: string) => void;
 };
 
-type MediaGridLayout = {
-  variant: 'single' | 'double' | 'quad' | 'grid';
-  columns: number;
-};
-
-const getMediaGridLayout = (count: number): MediaGridLayout => {
-  if (count <= 1) {
-    return { variant: 'single', columns: 1 };
-  }
-  if (count === 2) {
-    return { variant: 'double', columns: 2 };
-  }
-  if (count === 4) {
-    return { variant: 'quad', columns: 2 };
-  }
-  return { variant: 'grid', columns: 3 };
-};
+const ownerAvatarUrl = getGravatarUrl(getGravatarHash('mrjucn@qq.com'), 96);
 
 const MediaGrid = ({ images, onPreview }: { images: MomentMedia[]; onPreview: (index: number) => void }) => {
   if (images.length === 0) {
     return null;
   }
 
-  const layout = getMediaGridLayout(images.length);
+  if (images.length === 1) {
+    const [image] = images;
+
+    return (
+      <button type="button" className={styles.mediaLeadSingle} onClick={() => onPreview(0)} aria-label="查看图片">
+        <img src={image.thumbUrl || image.url} alt={image.alt ?? ''} loading="lazy" />
+      </button>
+    );
+  }
 
   return (
-    <div className={`${styles.mediaGrid} ${styles[layout.variant]}`} style={{ '--columns': layout.columns } as CSSProperties}>
-      {images.slice(0, 9).map((image, index) => (
-        <button
-          key={`${image.url}-${index}`}
-          type="button"
-          className={styles.mediaItem}
-          onClick={() => onPreview(index)}
-          aria-label={`查看第 ${index + 1} 张图片`}
-        >
-          <img src={image.thumbUrl || image.url} alt={image.alt ?? ''} loading="lazy" />
-        </button>
-      ))}
+    <div className={styles.mediaGrid} aria-label={`共 ${images.length} 张图片`}>
+      <div className={`${styles.mediaGridTrack} ${styles[`mediaGridCount${Math.min(images.length, 9)}`]}`}>
+        {images.slice(0, 9).map((image, index) => (
+          <button
+            key={`${image.url}-${index}`}
+            type="button"
+            className={styles.mediaGridItem}
+            onClick={() => onPreview(index)}
+            aria-label={`查看第 ${index + 1} 张图片`}
+          >
+            <img src={image.thumbUrl || image.url} alt={image.alt ?? ''} loading="lazy" />
+          </button>
+        ))}
+      </div>
+      <div className={styles.mediaGridMeta}>
+        <span>{images.length} 张图片</span>
+      </div>
     </div>
   );
 };
+
+const StoryCaption = ({ post }: { post: MomentPost }) => (
+  <>
+    {post.content ? <p className={styles.content}>{post.content}</p> : null}
+
+    {post.tags.length > 0 ? (
+      <div className={styles.tags}>
+        {post.tags.map((tag) => (
+          <span key={tag} className={styles.tag}>#{tag}</span>
+        ))}
+      </div>
+    ) : null}
+  </>
+);
 
 const VideoBlock = ({ post }: { post: MomentPost }) => {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -134,6 +145,9 @@ export const MomentCard = ({ post, isOwner, isFavorited, onSave, onDelete, onTog
   const showVideoBlock = post.type === 'video';
   const showArticleBlock = post.type === 'article';
   const showMusicBlock = post.type === 'music';
+  const isMediaLead = showImageGrid || showVideoBlock;
+  const hasEmbed = showArticleBlock || showMusicBlock;
+  const cardVariantClassName = isMediaLead ? styles.cardMediaLead : hasEmbed ? styles.cardEmbed : styles.cardTextLead;
 
   const handleDelete = async () => {
     if (!window.confirm('确定删除这条动态吗？')) {
@@ -181,49 +195,55 @@ export const MomentCard = ({ post, isOwner, isFavorited, onSave, onDelete, onTog
   const showSocialBox = post.likeCount > 0 || comments.length > 0 || isLoading || error || commentNotice;
 
   return (
-    <article className={styles.card}>
-      <div className={styles.authorAvatar} aria-hidden="true">
-        枫
-      </div>
+    <article className={`${styles.card} ${cardVariantClassName}`}>
       <div className={styles.body}>
-        <div className={styles.topLine}>
-          <div className={styles.authorWrap}>
-            <h2 className={styles.author}>枫叶</h2>
-            <span className={styles.timestamp}>· {formatMomentTime(post.publishedAt)}</span>
+        <header className={styles.signature}>
+          <img className={styles.authorAvatar} src={ownerAvatarUrl} alt="枫叶头像" />
+          <div className={styles.signatureText}>
+            <div className={styles.topLine}>
+              <div className={styles.authorWrap}>
+                <h2 className={styles.author}>枫叶</h2>
+                <span className={styles.timestamp}>{formatMomentTime(post.publishedAt)}</span>
+              </div>
+              {post.isPinned ? (
+                <span className={styles.pinned}>
+                  <Pin size={12} strokeWidth={2} aria-hidden="true" />
+                  置顶
+                </span>
+              ) : null}
+              {isFavorited ? <span className={styles.favoriteMark}>已收藏</span> : null}
+            </div>
+
+            {post.location ? (
+              <div className={styles.location} aria-label={`位置：${post.location}`}>
+                <MapPin size={14} strokeWidth={1.5} aria-hidden="true" />
+                <span>{post.location}</span>
+              </div>
+            ) : null}
           </div>
-          {post.isPinned ? (
-            <span className={styles.pinned}>
-              <Pin size={12} strokeWidth={2} aria-hidden="true" />
-              置顶
-            </span>
-          ) : null}
-          {isFavorited ? <span className={styles.favoriteMark}>已收藏</span> : null}
-        </div>
+        </header>
 
-        <p className={styles.content}>{post.content}</p>
-
-        {showImageGrid ? <MediaGrid images={post.images} onPreview={setPreviewIndex} /> : null}
-        {showVideoBlock ? <VideoBlock post={post} /> : null}
-        {showArticleBlock ? <ArticleBlock post={post} /> : null}
-        {showMusicBlock ? <MusicBlock post={post} /> : null}
-
-        {post.tags.length > 0 ? (
-          <div className={styles.tags}>
-            {post.tags.map((tag) => (
-              <span key={tag} className={styles.tag}>#{tag}</span>
-            ))}
-          </div>
-        ) : null}
-
-        {post.location ? (
-          <div className={styles.location} aria-label={`位置：${post.location}`}>
-            <MapPin size={14} strokeWidth={1.5} aria-hidden="true" />
-            <span>{post.location}</span>
-          </div>
-        ) : null}
+        <section className={`${styles.story} ${isMediaLead ? styles.storyMediaLead : styles.storyTextLead}`}>
+          {isMediaLead ? (
+            <>
+              {showImageGrid ? <MediaGrid images={post.images} onPreview={setPreviewIndex} /> : null}
+              {showVideoBlock ? <VideoBlock post={post} /> : null}
+              <StoryCaption post={post} />
+            </>
+          ) : (
+            <>
+              <StoryCaption post={post} />
+              {showArticleBlock ? <ArticleBlock post={post} /> : null}
+              {showMusicBlock ? <MusicBlock post={post} /> : null}
+            </>
+          )}
+        </section>
 
         <footer className={styles.meta}>
-          {post.source ? <span>来自 {post.source}</span> : null}
+          <div className={styles.metaInfo}>
+            {post.source ? <span>来自 {post.source}</span> : null}
+            {hasEmbed ? <span>内容卡片</span> : null}
+          </div>
           <div className={styles.actionWrap}>
             <button
               type="button"

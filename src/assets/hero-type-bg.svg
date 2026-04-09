@@ -1,0 +1,23 @@
+<svg width="1600" height="420" viewBox="0 0 1600 420" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1600" height="420" fill="#F5E7D7"/>
+  <rect x="1080" y="-80" width="420" height="420" rx="72" fill="#FF8A5B"/>
+  <rect x="1220" y="190" width="320" height="220" rx="48" fill="#FFD35C"/>
+  <rect x="20" y="250" width="300" height="140" rx="40" fill="#7FC4FF"/>
+  <rect x="280" y="210" width="250" height="170" rx="44" fill="#B6E7A0"/>
+  <g opacity="0.96">
+    <text x="72" y="284" fill="#171513" font-family="Open Sans, Helvetica, Arial, sans-serif" font-size="238" font-weight="800" letter-spacing="-18">MAPLE</text>
+  </g>
+  <g opacity="0.2">
+    <text x="84" y="164" fill="#171513" font-family="Open Sans, Helvetica, Arial, sans-serif" font-size="112" font-weight="700" letter-spacing="10">JXDCAP</text>
+  </g>
+  <g opacity="0.18">
+    <text x="820" y="126" fill="#171513" font-family="Open Sans, Helvetica, Arial, sans-serif" font-size="82" font-weight="700" letter-spacing="8">MOMENTS</text>
+  </g>
+  <g opacity="0.68">
+    <path d="M990 80C1044 80 1088 124 1088 178C1088 232 1044 276 990 276C936 276 892 232 892 178C892 124 936 80 990 80Z" fill="#171513"/>
+    <path d="M1018 116C1042 116 1062 136 1062 160C1062 184 1042 204 1018 204C994 204 974 184 974 160C974 136 994 116 1018 116Z" fill="#F5E7D7"/>
+  </g>
+  <g opacity="0.5">
+    <path d="M1320 40L1376 132L1264 132L1320 40Z" fill="#171513"/>
+  </g>
+</svg>
