@@ -26,24 +26,40 @@ export const OwnerBar = ({ ownerAuth }: OwnerBarProps) => {
   };
 
   if (ownerAuth.isChecking) {
-    return <div className={styles.bar}>检查作者状态...</div>;
+    return (
+      <section className={styles.ownerPanel}>
+        <div className={styles.ownerIntro}>
+          <p className={styles.ownerTitle}>作者模式</p>
+          <p className={styles.ownerHint}>检查作者状态中...</p>
+        </div>
+      </section>
+    );
   }
 
   if (ownerAuth.owner) {
     return (
-      <div className={styles.bar}>
-        <span>作者模式：{ownerAuth.owner.email}</span>
-        <button type="button" onClick={ownerAuth.logout}>
-          退出
-        </button>
-      </div>
+      <section className={styles.ownerPanel}>
+        <div className={styles.ownerIntro}>
+          <p className={styles.ownerTitle}>作者模式</p>
+          <p className={styles.ownerHint}>当前以 {ownerAuth.owner.email} 身份登录，可继续使用现有编辑与管理能力。</p>
+        </div>
+        <div className={styles.ownerActions}>
+          <button type="button" className={styles.ownerSecondaryButton} onClick={ownerAuth.logout}>
+            退出作者模式
+          </button>
+        </div>
+      </section>
     );
   }
 
   return (
-    <div className={styles.bar}>
+    <section className={styles.ownerPanel}>
+      <div className={styles.ownerIntro}>
+        <p className={styles.ownerTitle}>作者模式</p>
+        <p className={styles.ownerHint}>需要维护内容时，再从这里进入作者登录，不打扰日常浏览。</p>
+      </div>
       {isOpen ? (
-        <form className={styles.form} onSubmit={handleSubmit}>
+        <form className={styles.ownerForm} onSubmit={handleSubmit}>
           <input value={email} onChange={(event) => setEmail(event.target.value)} type="email" placeholder="owner email" />
           <input
             value={password}
@@ -51,17 +67,23 @@ export const OwnerBar = ({ ownerAuth }: OwnerBarProps) => {
             type="password"
             placeholder="password"
           />
-          <button type="submit">登录</button>
-          <button type="button" onClick={() => setIsOpen(false)}>
-            取消
-          </button>
+          <div className={styles.ownerActions}>
+            <button type="submit" className={styles.ownerPrimaryButton}>
+              进入作者模式
+            </button>
+            <button type="button" className={styles.ownerSecondaryButton} onClick={() => setIsOpen(false)}>
+              取消
+            </button>
+          </div>
           {error ? <small>{error}</small> : null}
         </form>
       ) : (
-        <button type="button" onClick={() => setIsOpen(true)}>
-          作者登录
-        </button>
+        <div className={styles.ownerActions}>
+          <button type="button" className={styles.ownerPrimaryButton} onClick={() => setIsOpen(true)}>
+            打开作者入口
+          </button>
+        </div>
       )}
-    </div>
+    </section>
   );
 };

@@ -32,6 +32,25 @@
   color: #ffffff;
 }
 
+.avatarButton {
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  color: inherit;
+}
+
+.avatarHint {
+  border-radius: 999px;
+  background: rgb(0 0 0 / 26%);
+  color: rgb(255 255 255 / 88%);
+  padding: 2px 8px;
+  font-size: 11px;
+  line-height: 1.4;
+}
+
 .profileName {
   margin: 0 0 5px;
   font-size: 18px;
@@ -60,43 +79,158 @@
   font-weight: 700;
 }
 
-.bar {
-  min-height: 34px;
+.profileSheet {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
   display: flex;
-  justify-content: flex-end;
-  align-items: flex-start;
-  gap: 8px;
-  color: rgb(255 255 255 / 88%);
-  font-size: 12px;
+  align-items: flex-end;
 }
 
-.bar button {
-  border: 1px solid rgb(255 255 255 / 42%);
-  border-radius: 6px;
-  background: rgb(0 0 0 / 22%);
-  color: #ffffff;
-  padding: 5px 9px;
+.profileBackdrop {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background: rgb(10 14 20 / 40%);
 }
 
-.form {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 6px;
+.profileCard {
+  position: relative;
+  z-index: 1;
   width: 100%;
+  border-radius: 24px 24px 0 0;
+  background: #ffffff;
+  padding: 18px 16px calc(20px + env(safe-area-inset-bottom));
+  box-shadow: 0 -14px 40px rgb(15 23 42 / 16%);
 }
 
-.form input {
+.profileCardHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.profileCardIdentity {
+  display: flex;
+  align-items: center;
+  gap: 12px;
   min-width: 0;
-  border: 1px solid rgb(255 255 255 / 42%);
-  border-radius: 5px;
-  background: rgb(255 255 255 / 92%);
-  padding: 6px 7px;
+}
+
+.profileCardAvatar {
+  width: 58px;
+  height: 58px;
+  flex: 0 0 auto;
+  border-radius: 14px;
+  background: #1f6f50;
+  color: #ffffff;
+  display: grid;
+  place-items: center;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.profileCardName {
+  margin: 0 0 4px;
+  color: #1f2329;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.profileCardBio {
+  margin: 0;
+  color: #687180;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.profileClose {
+  flex: 0 0 auto;
+  border: 1px solid #dde2ea;
+  border-radius: 999px;
+  background: #f7f8fa;
+  color: #5f6878;
+  padding: 6px 12px;
   font-size: 12px;
 }
 
-.form small {
-  grid-column: 1 / -1;
-  color: #ffe8e8;
+.profileCardNote {
+  margin: 14px 0 0;
+  color: #687180;
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.ownerPanel {
+  display: grid;
+  gap: 12px;
+  margin-top: 16px;
+  border-top: 1px solid #edf0f4;
+  padding-top: 16px;
+}
+
+.ownerIntro {
+  display: grid;
+  gap: 5px;
+}
+
+.ownerTitle {
+  margin: 0;
+  color: #1f2329;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.ownerHint {
+  margin: 0;
+  color: #687180;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.ownerForm {
+  display: grid;
+  gap: 8px;
+}
+
+.ownerForm input {
+  min-width: 0;
+  border: 1px solid #d8dee8;
+  border-radius: 12px;
+  background: #f8f9fb;
+  padding: 10px 12px;
+  font-size: 13px;
+}
+
+.ownerForm small {
+  color: #b42318;
+  font-size: 12px;
+}
+
+.ownerActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.ownerPrimaryButton,
+.ownerSecondaryButton {
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-size: 13px;
+}
+
+.ownerPrimaryButton {
+  border: 1px solid rgb(47 111 82 / 22%);
+  background: #edf6f1;
+  color: #2f6f52;
+}
+
+.ownerSecondaryButton {
+  border: 1px solid #dce1ea;
+  background: #ffffff;
+  color: #5f6878;
 }
 
 .timeline {
@@ -108,7 +242,7 @@
   top: 0;
   z-index: 5;
   display: grid;
-  gap: 9px;
+  gap: 10px;
   border-bottom: 1px solid var(--hairline);
   background: rgb(255 255 255 / 96%);
   padding: 10px 12px;
@@ -181,6 +315,63 @@
 .activeUtility span {
   background: rgb(47 111 82 / 12%);
   color: inherit;
+}
+
+.filterSummary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  align-items: center;
+  min-height: 22px;
+}
+
+.summaryChip {
+  border: 1px solid rgb(47 111 82 / 18%);
+  border-radius: 999px;
+  background: #f5faf7;
+  color: #2f6f52;
+  padding: 4px 10px;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.filterHint {
+  margin: 0;
+  color: #8a93a3;
+  font-size: 12px;
+}
+
+.filterPanel {
+  display: grid;
+  gap: 12px;
+  padding: 2px 0 1px;
+}
+
+.utilityRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.filterGroup {
+  display: grid;
+  gap: 7px;
+}
+
+.filterGroupHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #8a93a3;
+  font-size: 12px;
+}
+
+.inlineClear {
+  border: 0;
+  background: transparent;
+  color: #5f6878;
+  padding: 0;
+  font-size: 12px;
 }
 
 .tagFilter {
@@ -400,6 +591,40 @@
   border: 0;
 }
 
+.videoFilters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.videoBrowseSwitch {
+  display: inline-flex;
+  overflow: hidden;
+  border: 1px solid #dce1ea;
+  border-radius: 999px;
+  background: #ffffff;
+}
+
+.videoBrowseSwitch button {
+  border: 0;
+  background: transparent;
+  color: #5f6878;
+  padding: 6px 12px;
+  font-size: 12px;
+}
+
+.videoBrowseSwitch button + button {
+  border-left: 1px solid #dce1ea;
+}
+
+.videoBrowseSwitch .activeMode {
+  background: #edf6f1;
+  color: #2f6f52;
+  font-weight: 600;
+}
+
 .videoList {
   display: grid;
   gap: 12px;
@@ -502,8 +727,10 @@
     height: 72px;
   }
 
-  .form {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto auto;
+  .profileCard {
+    width: min(100%, 560px);
+    margin: 0 auto;
+    border-radius: 24px 24px 0 0;
   }
 
   .timelineTools {

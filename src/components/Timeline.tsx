@@ -63,64 +63,131 @@ const TimelineControls = ({
   onSelectMonth: (month: string) => void;
   onClearMonth: () => void;
   onToggleFavoritesOnly: () => void;
-}) => (
-  <div className={styles.timelineTools}>
-    <div className={styles.toolRow}>
-      <div className={styles.modeSwitch} aria-label="浏览模式">
-        <button type="button" className={viewMode === 'timeline' ? styles.activeMode : ''} onClick={() => onChangeMode('timeline')}>
-          全部
-        </button>
-        <button type="button" className={viewMode === 'photos' ? styles.activeMode : ''} onClick={() => onChangeMode('photos')}>
-          照片
-        </button>
-        <button type="button" className={viewMode === 'videos' ? styles.activeMode : ''} onClick={() => onChangeMode('videos')}>
-          视频
+}) => {
+  const [isExpanded, setIsExpanded] = useState(Boolean(activeTag || activeMonth || favoritesOnly));
+  const activeFilterCount = Number(favoritesOnly) + Number(Boolean(activeMonth)) + Number(Boolean(activeTag));
+
+  useEffect(() => {
+    if (activeTag || activeMonth || favoritesOnly) {
+      setIsExpanded(true);
+    }
+  }, [activeMonth, activeTag, favoritesOnly]);
+
+  return (
+    <div className={styles.timelineTools}>
+      <div className={styles.toolRow}>
+        <div className={styles.modeSwitch} aria-label="浏览模式">
+          <button type="button" className={viewMode === 'timeline' ? styles.activeMode : ''} onClick={() => onChangeMode('timeline')}>
+            全部
+          </button>
+          <button type="button" className={viewMode === 'photos' ? styles.activeMode : ''} onClick={() => onChangeMode('photos')}>
+            照片
+          </button>
+          <button type="button" className={viewMode === 'videos' ? styles.activeMode : ''} onClick={() => onChangeMode('videos')}>
+            视频
+          </button>
+        </div>
+
+        <button
+          type="button"
+          className={`${styles.utilityButton} ${activeFilterCount > 0 ? styles.activeUtility : ''}`}
+          onClick={() => setIsExpanded((current) => !current)}
+          aria-expanded={isExpanded}
+          aria-controls="timeline-filter-panel"
+        >
+          {isExpanded ? '收起筛选' : '筛选'}
+          {activeFilterCount > 0 ? <span>{activeFilterCount}</span> : null}
         </button>
       </div>
 
-      <button
-        type="button"
-        className={`${styles.utilityButton} ${favoritesOnly ? styles.activeUtility : ''}`}
-        onClick={onToggleFavoritesOnly}
-        aria-pressed={favoritesOnly}
-      >
-        {favoritesOnly ? '查看全部' : '仅收藏'}
-        {favoriteCount > 0 ? <span>{favoriteCount}</span> : null}
-      </button>
+      <div className={styles.filterSummary} aria-label="当前筛选状态">
+        {favoritesOnly ? (
+          <button type="button" className={styles.summaryChip} onClick={onToggleFavoritesOnly}>
+            仅收藏
+          </button>
+        ) : null}
+        {activeMonth ? (
+          <button type="button" className={styles.summaryChip} onClick={onClearMonth}>
+            {activeMonth}
+          </button>
+        ) : null}
+        {activeTag ? (
+          <button type="button" className={styles.summaryChip} onClick={onClearTag}>
+            #{activeTag}
+          </button>
+        ) : null}
+        {activeFilterCount === 0 ? <p className={styles.filterHint}>按需展开收藏、归档和标签筛选。</p> : null}
+      </div>
+
+      {isExpanded ? (
+        <div id="timeline-filter-panel" className={styles.filterPanel}>
+          <div className={styles.utilityRow}>
+            <button
+              type="button"
+              className={`${styles.utilityButton} ${favoritesOnly ? styles.activeUtility : ''}`}
+              onClick={onToggleFavoritesOnly}
+              aria-pressed={favoritesOnly}
+            >
+              {favoritesOnly ? '查看全部' : '仅收藏'}
+              {favoriteCount > 0 ? <span>{favoriteCount}</span> : null}
+            </button>
+          </div>
+
+          {archiveMonths.length > 0 ? (
+            <section className={styles.filterGroup}>
+              <div className={styles.filterGroupHeader}>
+                <span>归档</span>
+                {activeMonth ? (
+                  <button type="button" className={styles.inlineClear} onClick={onClearMonth}>
+                    清除
+                  </button>
+                ) : null}
+              </div>
+              <div className={styles.archiveFilter} aria-label="按月份归档筛选">
+                <button type="button" className={!activeMonth ? styles.activeTag : ''} onClick={onClearMonth}>
+                  全部月份
+                </button>
+                {archiveMonths.map((month) => (
+                  <button
+                    key={month}
+                    type="button"
+                    className={activeMonth === month ? styles.activeTag : ''}
+                    onClick={() => onSelectMonth(month)}
+                  >
+                    {month}
+                  </button>
+                ))}
+              </div>
+            </section>
+          ) : null}
+
+          {tags.length > 0 ? (
+            <section className={styles.filterGroup}>
+              <div className={styles.filterGroupHeader}>
+                <span>标签</span>
+                {activeTag ? (
+                  <button type="button" className={styles.inlineClear} onClick={onClearTag}>
+                    清除
+                  </button>
+                ) : null}
+              </div>
+              <div className={styles.tagFilter} aria-label="按标签筛选">
+                <button type="button" className={!activeTag ? styles.activeTag : ''} onClick={onClearTag}>
+                  全部标签
+                </button>
+                {tags.map((tag) => (
+                  <button key={tag} type="button" className={activeTag === tag ? styles.activeTag : ''} onClick={() => onSelectTag(tag)}>
+                    #{tag}
+                  </button>
+                ))}
+              </div>
+            </section>
+          ) : null}
+        </div>
+      ) : null}
     </div>
-
-    {archiveMonths.length > 0 ? (
-      <div className={styles.archiveFilter} aria-label="按月份归档筛选">
-        <button type="button" className={!activeMonth ? styles.activeTag : ''} onClick={onClearMonth}>
-          全部月份
-        </button>
-        {archiveMonths.map((month) => (
-          <button
-            key={month}
-            type="button"
-            className={activeMonth === month ? styles.activeTag : ''}
-            onClick={() => onSelectMonth(month)}
-          >
-            {month}
-          </button>
-        ))}
-      </div>
-    ) : null}
-
-    {tags.length > 0 ? (
-      <div className={styles.tagFilter} aria-label="按标签筛选">
-        <button type="button" className={!activeTag ? styles.activeTag : ''} onClick={onClearTag}>
-          全部标签
-        </button>
-        {tags.map((tag) => (
-          <button key={tag} type="button" className={activeTag === tag ? styles.activeTag : ''} onClick={() => onSelectTag(tag)}>
-            #{tag}
-          </button>
-        ))}
-      </div>
-    ) : null}
-  </div>
-);
+  );
+};
 
 const AlbumView = ({ images }: { images: AlbumImage[] }) => {
   const [previewIndex, setPreviewIndex] = useState<number | null>(null);
@@ -158,10 +225,22 @@ const AlbumView = ({ images }: { images: AlbumImage[] }) => {
   );
 };
 
-const VideoView = ({ posts }: { posts: MomentPost[] }) => {
+const VideoView = ({
+  posts,
+  favoritesOnly,
+  favoriteCount,
+  onToggleFavoritesOnly,
+}: {
+  posts: MomentPost[];
+  favoritesOnly: boolean;
+  favoriteCount: number;
+  onToggleFavoritesOnly: () => void;
+}) => {
   const [activeVideoId, setActiveVideoId] = useState<string | null>(null);
-  const heroPost = posts[0];
-  const listPosts = posts.slice(1);
+  const [browseMode, setBrowseMode] = useState<'recent' | 'all'>('recent');
+  const visiblePosts = useMemo(() => (browseMode === 'recent' ? posts.slice(0, 6) : posts), [browseMode, posts]);
+  const heroPost = visiblePosts[0];
+  const listPosts = visiblePosts.slice(1);
 
   if (!heroPost) {
     return <div className={styles.state}>这个范围里还没有视频。</div>;
@@ -173,7 +252,7 @@ const VideoView = ({ posts }: { posts: MomentPost[] }) => {
         <div className={styles.videoHeroCopy}>
           <p className={styles.videoHeroEyebrow}>视频</p>
           <h2>把会动的片段单独留出来</h2>
-          <span>{posts.length} 条视频动态</span>
+          <span>{browseMode === 'recent' ? `最近 ${visiblePosts.length} 条视频动态` : `${visiblePosts.length} 条视频动态`}</span>
         </div>
 
         <div className={styles.videoHeroMedia}>
@@ -190,6 +269,30 @@ const VideoView = ({ posts }: { posts: MomentPost[] }) => {
           )}
         </div>
       </header>
+
+      <div className={styles.videoFilters} aria-label="视频模式轻筛选">
+        <div className={styles.videoBrowseSwitch}>
+          <button
+            type="button"
+            className={browseMode === 'recent' ? styles.activeMode : ''}
+            onClick={() => setBrowseMode('recent')}
+          >
+            最近
+          </button>
+          <button type="button" className={browseMode === 'all' ? styles.activeMode : ''} onClick={() => setBrowseMode('all')}>
+            全部
+          </button>
+        </div>
+        <button
+          type="button"
+          className={`${styles.utilityButton} ${favoritesOnly ? styles.activeUtility : ''}`}
+          onClick={onToggleFavoritesOnly}
+          aria-pressed={favoritesOnly}
+        >
+          {favoritesOnly ? '全部视频' : '仅收藏'}
+          {favoriteCount > 0 ? <span>{favoriteCount}</span> : null}
+        </button>
+      </div>
 
       {listPosts.length > 0 ? (
         <div className={styles.videoList}>
@@ -269,6 +372,10 @@ export const Timeline = ({ postsState, isOwner }: TimelineProps) => {
   );
   const albumImages = useMemo(() => collectAlbumImages(filteredPosts), [filteredPosts]);
   const videoPosts = useMemo(() => filteredPosts.filter((post) => post.type === 'video'), [filteredPosts]);
+  const favoriteVideoCount = useMemo(
+    () => videoPosts.filter((post) => favoritePostIds.has(post.id)).length,
+    [favoritePostIds, videoPosts],
+  );
 
   useEffect(() => {
     saveTimelinePreferences({ viewMode, activeTag, activeMonth });
@@ -351,7 +458,12 @@ export const Timeline = ({ postsState, isOwner }: TimelineProps) => {
       {viewMode === 'photos' ? (
         <AlbumView images={albumImages} />
       ) : viewMode === 'videos' ? (
-        <VideoView posts={videoPosts} />
+        <VideoView
+          posts={videoPosts}
+          favoritesOnly={favoritesOnly}
+          favoriteCount={favoriteVideoCount}
+          onToggleFavoritesOnly={() => setFavoritesOnly((current) => !current)}
+        />
       ) : filteredPosts.length > 0 ? (
         <div className={styles.timeline}>
           {filteredPosts.map((post) => (
