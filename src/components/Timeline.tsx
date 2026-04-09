@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, useRef, useCallback } from 'react';
 import { Play } from 'lucide-react';
 import { Lightbox } from './Lightbox';
 import { MomentCard } from './MomentCard';
@@ -396,6 +396,25 @@ export const Timeline = ({ postsState, isOwner }: TimelineProps) => {
     [favoritePostIds, videoPosts],
   );
 
+  const observerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && postsState.hasMore && !postsState.isLoadingMore) {
+          postsState.loadMore();
+        }
+      },
+      { rootMargin: '100px' }
+    );
+
+    if (observerRef.current) {
+      observer.observe(observerRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [postsState.hasMore, postsState.isLoadingMore, postsState.loadMore]);
+
   useEffect(() => {
     saveTimelinePreferences({ viewMode, activeTag, activeMonth });
   }, [activeMonth, activeTag, viewMode]);
@@ -503,13 +522,21 @@ export const Timeline = ({ postsState, isOwner }: TimelineProps) => {
         <div className={styles.state}>{emptyMessage}</div>
       )}
 
-      {postsState.hasMore && (
-        <div className={styles.state}>
-          <button type="button" onClick={postsState.loadMore} disabled={postsState.isLoadingMore}>
-            {postsState.isLoadingMore ? '加载中...' : '加载更多'}
-          </button>
+      {postsState.hasMore ? (
+        <div ref={observerRef} className={styles.loadMoreTarget}>
+          {postsState.isLoadingMore ? (
+            <span className={styles.loadingDots}>
+              <span />
+              <span />
+              <span />
+            </span>
+          ) : null}
         </div>
-      )}
+      ) : filteredPosts.length > 0 ? (
+        <div className={styles.endIndicator}>
+          <span className={styles.endDot} />
+        </div>
+      ) : null}
     </>
   );
 };
