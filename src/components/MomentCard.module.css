@@ -1,16 +1,16 @@
 .card {
   display: grid;
   grid-template-columns: 42px minmax(0, 1fr);
-  gap: 9px;
-  padding: 14px 12px 13px;
-  border-bottom: 1px solid var(--hairline);
+  gap: 14px;
+  padding: 20px 16px;
+  border-bottom: 1px solid rgb(0 0 0 / 4%);
   background: #ffffff;
 }
 
 .authorAvatar {
   width: 40px;
   height: 40px;
-  border-radius: 5px;
+  border-radius: 10px;
   background: #2f6f52;
   color: #ffffff;
   display: grid;
@@ -55,14 +55,15 @@
 }
 
 .content {
-  margin: 0 0 8px;
+  margin: 0 0 12px;
   white-space: pre-wrap;
-  line-height: 1.48;
+  line-height: 1.65;
   font-size: 15px;
+  color: #222222;
 }
 
 .mediaGrid {
-  --gap: 4px;
+  --gap: 6px;
   display: grid;
   grid-template-columns: repeat(var(--columns), minmax(0, 1fr));
   gap: var(--gap);
@@ -74,6 +75,7 @@
   padding: 0;
   background: #f2f3f5;
   overflow: hidden;
+  border-radius: 6px;
   aspect-ratio: 1;
 }
 
@@ -252,7 +254,7 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 8px;
-  margin-top: 7px;
+  margin-top: 12px;
   color: var(--muted);
   font-size: 12px;
 }
@@ -354,20 +356,10 @@
 
 .comments {
   position: relative;
-  margin-top: 8px;
-  background: #f2f3f5;
-  border-radius: 3px;
-  padding: 6px 8px;
-}
-
-.comments::before {
-  content: '';
-  position: absolute;
-  top: -6px;
-  left: 14px;
-  border-bottom: 6px solid #f2f3f5;
-  border-left: 6px solid transparent;
-  border-right: 6px solid transparent;
+  margin-top: 12px;
+  background: #f5f6f8;
+  border-radius: 12px;
+  padding: 10px 12px;
 }
 
 .likes {
@@ -528,8 +520,8 @@
 @media (min-width: 700px) {
   .card {
     grid-template-columns: 46px minmax(0, 1fr);
-    gap: 10px;
-    padding: 17px 15px 16px;
+    gap: 16px;
+    padding: 28px 24px;
   }
 
   .authorAvatar {
