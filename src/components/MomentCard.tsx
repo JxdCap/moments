@@ -11,10 +11,12 @@ import styles from './MomentCard.module.css';
 type MomentCardProps = {
   post: MomentPost;
   isOwner: boolean;
+  isFavorited: boolean;
   onSave: (postId: string, patch: PostPatch) => Promise<void>;
   onDelete: (postId: string) => Promise<void>;
   onTogglePinned: (post: MomentPost) => Promise<void>;
   onToggleLike: (post: MomentPost) => Promise<void>;
+  onToggleFavorite: (postId: string) => void;
 };
 
 type MediaGridLayout = {
@@ -111,7 +113,7 @@ const MusicBlock = ({ post }: { post: MomentPost }) => (
   </div>
 );
 
-export const MomentCard = ({ post, isOwner, onSave, onDelete, onTogglePinned, onToggleLike }: MomentCardProps) => {
+export const MomentCard = ({ post, isOwner, isFavorited, onSave, onDelete, onTogglePinned, onToggleLike, onToggleFavorite }: MomentCardProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isBusy, setIsBusy] = useState(false);
   const [isActionMenuOpen, setIsActionMenuOpen] = useState(false);
@@ -161,6 +163,11 @@ export const MomentCard = ({ post, isOwner, onSave, onDelete, onTogglePinned, on
     setIsCommenting(true);
   };
 
+  const handleToggleFavorite = () => {
+    setIsActionMenuOpen(false);
+    onToggleFavorite(post.id);
+  };
+
   useEffect(() => {
     if (!commentNotice) {
       return;
@@ -181,6 +188,7 @@ export const MomentCard = ({ post, isOwner, onSave, onDelete, onTogglePinned, on
         <div className={styles.topLine}>
           <h2 className={styles.author}>站长</h2>
           {post.isPinned ? <span className={styles.pinned}>置顶</span> : null}
+          {isFavorited ? <span className={styles.favoriteMark}>已收藏</span> : null}
         </div>
 
         <p className={styles.content}>{post.content}</p>
@@ -220,6 +228,12 @@ export const MomentCard = ({ post, isOwner, onSave, onDelete, onTogglePinned, on
             </button>
             {isActionMenuOpen ? (
               <div className={styles.actionMenu}>
+                <button type="button" onClick={handleToggleFavorite}>
+                  <span className={styles.actionFavoriteIcon} aria-hidden="true">
+                    {isFavorited ? '★' : '☆'}
+                  </span>
+                  {isFavorited ? '取消收藏' : '收藏'}
+                </button>
                 <button type="button" onClick={handleToggleLike} disabled={isBusy}>
                   <span className={styles.actionLikeIcon} aria-hidden="true">
                     {post.hasLiked ? '♡' : '♥'}

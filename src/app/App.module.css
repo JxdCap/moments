@@ -115,6 +115,13 @@
   backdrop-filter: blur(10px);
 }
 
+.toolRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
 .modeSwitch {
   display: inline-flex;
   justify-self: start;
@@ -142,6 +149,40 @@
   font-weight: 600;
 }
 
+.utilityButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid #dce1ea;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #5f6878;
+  padding: 5px 10px;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.utilityButton span {
+  min-width: 18px;
+  border-radius: 999px;
+  background: #f1f3f6;
+  color: #687180;
+  padding: 1px 6px;
+  line-height: 1.4;
+}
+
+.activeUtility {
+  border-color: rgb(47 111 82 / 34%);
+  background: #edf6f1;
+  color: #2f6f52;
+  font-weight: 600;
+}
+
+.activeUtility span {
+  background: rgb(47 111 82 / 12%);
+  color: inherit;
+}
+
 .tagFilter {
   display: flex;
   gap: 7px;
@@ -166,6 +207,36 @@
 }
 
 .tagFilter .activeTag {
+  border-color: rgb(47 111 82 / 34%);
+  background: #edf6f1;
+  color: #2f6f52;
+  font-weight: 600;
+}
+
+.archiveFilter {
+  display: flex;
+  gap: 7px;
+  overflow-x: auto;
+  padding-bottom: 1px;
+  scrollbar-width: none;
+}
+
+.archiveFilter::-webkit-scrollbar {
+  display: none;
+}
+
+.archiveFilter button {
+  flex: 0 0 auto;
+  border: 1px solid #dce1ea;
+  border-radius: 999px;
+  background: #f8f9fb;
+  color: #5f6878;
+  padding: 4px 10px;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.archiveFilter .activeTag {
   border-color: rgb(47 111 82 / 34%);
   background: #edf6f1;
   color: #2f6f52;

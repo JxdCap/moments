@@ -1,8 +1,15 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Lightbox } from './Lightbox';
 import { MomentCard } from './MomentCard';
 import type { usePosts } from '../hooks/usePosts';
 import type { MomentMedia, MomentPost } from '../types/moment';
+import {
+  loadFavoritePostIds,
+  loadTimelinePreferences,
+  saveFavoritePostIds,
+  saveTimelinePreferences,
+  type TimelineViewMode,
+} from '../utils/timelineStorage';
 import { formatDuration, formatMomentTime } from '../utils/date';
 import styles from '../app/App.module.css';
 
@@ -10,8 +17,6 @@ type TimelineProps = {
   postsState: ReturnType<typeof usePosts>;
   isOwner: boolean;
 };
-
-type ViewMode = 'timeline' | 'photos' | 'videos';
 
 type AlbumImage = {
   image: MomentMedia;
@@ -25,33 +30,82 @@ const collectTags = (posts: MomentPost[]) =>
 const collectAlbumImages = (posts: MomentPost[]): AlbumImage[] =>
   posts.flatMap((post) => post.images.map((image, imageIndex) => ({ image, post, imageIndex })));
 
+const getArchiveMonth = (publishedAt: string) => publishedAt.slice(0, 7);
+
+const collectArchiveMonths = (posts: MomentPost[]) =>
+  Array.from(new Set(posts.map((post) => getArchiveMonth(post.publishedAt)))).sort((first, second) => second.localeCompare(first));
+
 const TimelineControls = ({
   tags,
   activeTag,
   viewMode,
+  archiveMonths,
+  activeMonth,
+  favoritesOnly,
+  favoriteCount,
   onSelectTag,
   onClearTag,
   onChangeMode,
+  onSelectMonth,
+  onClearMonth,
+  onToggleFavoritesOnly,
 }: {
   tags: string[];
   activeTag: string | null;
-  viewMode: ViewMode;
+  viewMode: TimelineViewMode;
+  archiveMonths: string[];
+  activeMonth: string | null;
+  favoritesOnly: boolean;
+  favoriteCount: number;
   onSelectTag: (tag: string) => void;
   onClearTag: () => void;
-  onChangeMode: (mode: ViewMode) => void;
+  onChangeMode: (mode: TimelineViewMode) => void;
+  onSelectMonth: (month: string) => void;
+  onClearMonth: () => void;
+  onToggleFavoritesOnly: () => void;
 }) => (
   <div className={styles.timelineTools}>
-    <div className={styles.modeSwitch} aria-label="浏览模式">
-      <button type="button" className={viewMode === 'timeline' ? styles.activeMode : ''} onClick={() => onChangeMode('timeline')}>
-        全部
-      </button>
-      <button type="button" className={viewMode === 'photos' ? styles.activeMode : ''} onClick={() => onChangeMode('photos')}>
-        照片
-      </button>
-      <button type="button" className={viewMode === 'videos' ? styles.activeMode : ''} onClick={() => onChangeMode('videos')}>
-        视频
+    <div className={styles.toolRow}>
+      <div className={styles.modeSwitch} aria-label="浏览模式">
+        <button type="button" className={viewMode === 'timeline' ? styles.activeMode : ''} onClick={() => onChangeMode('timeline')}>
+          全部
+        </button>
+        <button type="button" className={viewMode === 'photos' ? styles.activeMode : ''} onClick={() => onChangeMode('photos')}>
+          照片
+        </button>
+        <button type="button" className={viewMode === 'videos' ? styles.activeMode : ''} onClick={() => onChangeMode('videos')}>
+          视频
+        </button>
+      </div>
+
+      <button
+        type="button"
+        className={`${styles.utilityButton} ${favoritesOnly ? styles.activeUtility : ''}`}
+        onClick={onToggleFavoritesOnly}
+        aria-pressed={favoritesOnly}
+      >
+        {favoritesOnly ? '查看全部' : '仅收藏'}
+        {favoriteCount > 0 ? <span>{favoriteCount}</span> : null}
       </button>
     </div>
+
+    {archiveMonths.length > 0 ? (
+      <div className={styles.archiveFilter} aria-label="按月份归档筛选">
+        <button type="button" className={!activeMonth ? styles.activeTag : ''} onClick={onClearMonth}>
+          全部月份
+        </button>
+        {archiveMonths.map((month) => (
+          <button
+            key={month}
+            type="button"
+            className={activeMonth === month ? styles.activeTag : ''}
+            onClick={() => onSelectMonth(month)}
+          >
+            {month}
+          </button>
+        ))}
+      </div>
+    ) : null}
 
     {tags.length > 0 ? (
       <div className={styles.tagFilter} aria-label="按标签筛选">
@@ -182,15 +236,80 @@ const VideoView = ({ posts }: { posts: MomentPost[] }) => {
 };
 
 export const Timeline = ({ postsState, isOwner }: TimelineProps) => {
-  const [activeTag, setActiveTag] = useState<string | null>(null);
-  const [viewMode, setViewMode] = useState<ViewMode>('timeline');
+  const initialPreferences = useMemo(() => loadTimelinePreferences(), []);
+  const [activeTag, setActiveTag] = useState<string | null>(initialPreferences.activeTag);
+  const [activeMonth, setActiveMonth] = useState<string | null>(initialPreferences.activeMonth);
+  const [favoritesOnly, setFavoritesOnly] = useState(false);
+  const [viewMode, setViewMode] = useState<TimelineViewMode>(initialPreferences.viewMode);
+  const [favoritePostIds, setFavoritePostIds] = useState<Set<string>>(() => new Set(loadFavoritePostIds()));
   const tags = useMemo(() => collectTags(postsState.posts), [postsState.posts]);
+  const archiveMonths = useMemo(() => collectArchiveMonths(postsState.posts), [postsState.posts]);
+  const favoriteCount = useMemo(
+    () => postsState.posts.filter((post) => favoritePostIds.has(post.id)).length,
+    [favoritePostIds, postsState.posts],
+  );
   const filteredPosts = useMemo(
-    () => (activeTag ? postsState.posts.filter((post) => post.tags.includes(activeTag)) : postsState.posts),
-    [activeTag, postsState.posts],
+    () =>
+      postsState.posts.filter((post) => {
+        if (favoritesOnly && !favoritePostIds.has(post.id)) {
+          return false;
+        }
+
+        if (activeTag && !post.tags.includes(activeTag)) {
+          return false;
+        }
+
+        if (activeMonth && getArchiveMonth(post.publishedAt) !== activeMonth) {
+          return false;
+        }
+
+        return true;
+      }),
+    [activeMonth, activeTag, favoritePostIds, favoritesOnly, postsState.posts],
   );
   const albumImages = useMemo(() => collectAlbumImages(filteredPosts), [filteredPosts]);
   const videoPosts = useMemo(() => filteredPosts.filter((post) => post.type === 'video'), [filteredPosts]);
+
+  useEffect(() => {
+    saveTimelinePreferences({ viewMode, activeTag, activeMonth });
+  }, [activeMonth, activeTag, viewMode]);
+
+  useEffect(() => {
+    if (activeTag && !tags.includes(activeTag)) {
+      setActiveTag(null);
+    }
+  }, [activeTag, tags]);
+
+  useEffect(() => {
+    if (activeMonth && !archiveMonths.includes(activeMonth)) {
+      setActiveMonth(null);
+    }
+  }, [activeMonth, archiveMonths]);
+
+  useEffect(() => {
+    if (favoriteCount > 0 || !favoritesOnly) {
+      return;
+    }
+
+    setFavoritesOnly(false);
+  }, [favoriteCount, favoritesOnly]);
+
+  const handleToggleFavorite = (postId: string) => {
+    setFavoritePostIds((current) => {
+      const next = new Set(current);
+
+      if (next.has(postId)) {
+        next.delete(postId);
+      } else {
+        next.add(postId);
+      }
+
+      saveFavoritePostIds(next);
+      return next;
+    });
+  };
+
+  const emptyMessage = favoritesOnly ? '收藏夹里还没有这个范围的动态。' : '这个筛选范围里还没有动态。';
 
   if (postsState.isLoading) {
     return <div className={styles.state}>正在加载朋友圈...</div>;
@@ -217,9 +336,16 @@ export const Timeline = ({ postsState, isOwner }: TimelineProps) => {
         tags={tags}
         activeTag={activeTag}
         viewMode={viewMode}
+        archiveMonths={archiveMonths}
+        activeMonth={activeMonth}
+        favoritesOnly={favoritesOnly}
+        favoriteCount={favoriteCount}
         onSelectTag={setActiveTag}
         onClearTag={() => setActiveTag(null)}
         onChangeMode={setViewMode}
+        onSelectMonth={setActiveMonth}
+        onClearMonth={() => setActiveMonth(null)}
+        onToggleFavoritesOnly={() => setFavoritesOnly((current) => !current)}
       />
 
       {viewMode === 'photos' ? (
@@ -233,15 +359,17 @@ export const Timeline = ({ postsState, isOwner }: TimelineProps) => {
               key={post.id}
               post={post}
               isOwner={isOwner}
+              isFavorited={favoritePostIds.has(post.id)}
               onSave={postsState.savePost}
               onDelete={postsState.removePost}
               onTogglePinned={postsState.togglePinned}
               onToggleLike={postsState.toggleLike}
+              onToggleFavorite={handleToggleFavorite}
             />
           ))}
         </div>
       ) : (
-        <div className={styles.state}>这个标签下还没有动态。</div>
+        <div className={styles.state}>{emptyMessage}</div>
       )}
     </>
   );

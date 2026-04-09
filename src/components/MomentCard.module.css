@@ -45,6 +45,15 @@
   font-size: 12px;
 }
 
+.favoriteMark {
+  border: 1px solid rgb(47 111 82 / 20%);
+  border-radius: 999px;
+  background: #edf6f1;
+  color: #2f6f52;
+  padding: 1px 7px;
+  font-size: 12px;
+}
+
 .content {
   margin: 0 0 8px;
   white-space: pre-wrap;
@@ -339,6 +348,10 @@
 
 .actionLikeIcon {
   transform: translateY(-1px);
+}
+
+.actionFavoriteIcon {
+  transform: translateY(-0.5px);
 }
 
 .actionCommentIcon {
