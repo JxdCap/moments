@@ -263,38 +263,15 @@
 }
 
 .moreButton {
-  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 30px;
   height: 20px;
   border: 0;
   border-radius: 4px;
   background: #eef1f5;
   color: var(--wechat-link);
-}
-
-.moreButton span,
-.moreButton::before,
-.moreButton::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  width: 3px;
-  height: 3px;
-  border-radius: 50%;
-  background: #5d6f91;
-  transform: translateY(-50%);
-}
-
-.moreButton span {
-  left: 13px;
-}
-
-.moreButton::before {
-  left: 8px;
-}
-
-.moreButton::after {
-  right: 8px;
 }
 
 .moreButton[aria-expanded='true'] {
@@ -340,39 +317,8 @@
 }
 
 .actionMenu button span {
-  width: 14px;
+  display: inline-flex;
   color: #ffffff;
-  font-size: 14px;
-  line-height: 1;
-}
-
-.actionLikeIcon {
-  transform: translateY(-1px);
-}
-
-.actionFavoriteIcon {
-  transform: translateY(-0.5px);
-}
-
-.actionCommentIcon {
-  position: relative;
-  height: 12px;
-  border: 1.5px solid rgb(255 255 255 / 92%);
-  border-radius: 3px;
-  transform: translateY(1px);
-}
-
-.actionCommentIcon::after {
-  content: '';
-  position: absolute;
-  right: 1px;
-  bottom: -4px;
-  width: 5px;
-  height: 5px;
-  border-right: 1.5px solid rgb(255 255 255 / 92%);
-  border-bottom: 1.5px solid rgb(255 255 255 / 92%);
-  background: #30333a;
-  transform: rotate(45deg);
 }
 
 .actionMenu button + button {

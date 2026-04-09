@@ -1,4 +1,5 @@
 import { CSSProperties, useEffect, useState } from 'react';
+import { Heart, Star, MapPin, MessageCircle, MoreHorizontal, Play, FileText, Music } from 'lucide-react';
 import { CommentForm } from './CommentForm';
 import { EditPostDialog } from './EditPostDialog';
 import { Lightbox } from './Lightbox';
@@ -79,7 +80,7 @@ const VideoBlock = ({ post }: { post: MomentPost }) => {
   return (
     <button type="button" className={styles.videoPreview} onClick={() => setIsPlaying(true)}>
       {post.videoCover ? <img src={post.videoCover} alt="" loading="lazy" /> : null}
-      <span className={styles.play}>播放</span>
+      <span className={styles.play}><Play size={32} fill="currentColor" strokeWidth={1} /></span>
       {post.videoDuration ? <span className={styles.duration}>{formatDuration(post.videoDuration)}</span> : null}
     </button>
   );
@@ -92,7 +93,7 @@ const ArticleBlock = ({ post }: { post: MomentPost }) => {
 
   return (
     <a className={styles.articleCard} href={post.articleUrl} target="_blank" rel="noreferrer">
-      {post.articleCover ? <img src={post.articleCover} alt="" loading="lazy" /> : <span className={styles.articleFallback}>文</span>}
+      {post.articleCover ? <img src={post.articleCover} alt="" loading="lazy" /> : <span className={styles.articleFallback}><FileText size={24} strokeWidth={1.5} /></span>}
       <span className={styles.richText}>
         <strong>{post.articleTitle}</strong>
         {post.articleDesc ? <small>{post.articleDesc}</small> : null}
@@ -104,7 +105,7 @@ const ArticleBlock = ({ post }: { post: MomentPost }) => {
 
 const MusicBlock = ({ post }: { post: MomentPost }) => (
   <div className={styles.musicCard}>
-    {post.musicCover ? <img src={post.musicCover} alt="" loading="lazy" /> : <span className={styles.musicCover}>♪</span>}
+    {post.musicCover ? <img src={post.musicCover} alt="" loading="lazy" /> : <span className={styles.musicCover}><Music size={24} strokeWidth={1.5} /></span>}
     <span className={styles.richText}>
       <strong>{post.musicTitle ?? '未命名音乐'}</strong>
       <small>{post.musicArtist ?? '未知作者'}</small>
@@ -208,7 +209,7 @@ export const MomentCard = ({ post, isOwner, isFavorited, onSave, onDelete, onTog
 
         {post.location ? (
           <div className={styles.location} aria-label={`位置：${post.location}`}>
-            <span aria-hidden="true">⌖</span>
+            <MapPin size={14} strokeWidth={1.5} aria-hidden="true" />
             <span>{post.location}</span>
           </div>
         ) : null}
@@ -224,24 +225,26 @@ export const MomentCard = ({ post, isOwner, isFavorited, onSave, onDelete, onTog
               aria-label="打开操作菜单"
               aria-expanded={isActionMenuOpen}
             >
-              <span aria-hidden="true" />
+              <MoreHorizontal size={18} strokeWidth={1.5} aria-hidden="true" />
             </button>
             {isActionMenuOpen ? (
               <div className={styles.actionMenu}>
                 <button type="button" onClick={handleToggleFavorite}>
                   <span className={styles.actionFavoriteIcon} aria-hidden="true">
-                    {isFavorited ? '★' : '☆'}
+                    <Star size={14} fill={isFavorited ? "currentColor" : "none"} strokeWidth={1.5} />
                   </span>
                   {isFavorited ? '取消收藏' : '收藏'}
                 </button>
                 <button type="button" onClick={handleToggleLike} disabled={isBusy}>
                   <span className={styles.actionLikeIcon} aria-hidden="true">
-                    {post.hasLiked ? '♡' : '♥'}
+                    <Heart size={14} fill={post.hasLiked ? "currentColor" : "none"} strokeWidth={1.5} />
                   </span>
                   {post.hasLiked ? '取消' : '赞'}
                 </button>
                 <button type="button" onClick={handleComment}>
-                  <span className={styles.actionCommentIcon} aria-hidden="true" />
+                  <span className={styles.actionCommentIcon} aria-hidden="true">
+                    <MessageCircle size={14} strokeWidth={1.5} />
+                  </span>
                   评论
                 </button>
               </div>
@@ -267,7 +270,7 @@ export const MomentCard = ({ post, isOwner, isFavorited, onSave, onDelete, onTog
           <section className={styles.comments} aria-label="互动">
             {post.likeCount > 0 ? (
               <div className={styles.likes}>
-                <span aria-hidden="true">♥</span>
+                <Heart size={14} fill="currentColor" strokeWidth={1.5} aria-hidden="true" />
                 <strong>{likeText}</strong>
               </div>
             ) : null}

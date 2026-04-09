@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { Play } from 'lucide-react';
 import { Lightbox } from './Lightbox';
 import { MomentCard } from './MomentCard';
 import type { usePosts } from '../hooks/usePosts';
@@ -275,7 +276,7 @@ const VideoView = ({
           ) : (
             <button type="button" className={styles.videoHeroPreview} onClick={() => setActiveVideoId(heroPost.id)}>
               {heroPost.videoCover ? <img src={heroPost.videoCover} alt="" loading="lazy" /> : null}
-              <span className={styles.videoHeroPlay}>播放视频</span>
+              <span className={styles.videoHeroPlay}><Play size={36} fill="currentColor" strokeWidth={1} /></span>
               {heroPost.videoDuration ? <span className={styles.videoHeroDuration}>{formatDuration(heroPost.videoDuration)}</span> : null}
             </button>
           )}
@@ -327,7 +328,7 @@ const VideoView = ({
                   ) : (
                     <button type="button" className={styles.videoCardPreview} onClick={() => setActiveVideoId(post.id)}>
                       {post.videoCover ? <img src={post.videoCover} alt="" loading="lazy" /> : null}
-                      <span className={styles.videoCardPlay}>播放</span>
+                      <span className={styles.videoCardPlay}><Play size={32} fill="currentColor" strokeWidth={1} /></span>
                       {post.videoDuration ? <span className={styles.videoCardDuration}>{formatDuration(post.videoDuration)}</span> : null}
                     </button>
                   )}

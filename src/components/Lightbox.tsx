@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 import type { MomentMedia } from '../types/moment';
 import styles from './Lightbox.module.css';
 
@@ -59,7 +60,7 @@ export const Lightbox = ({ images, activeIndex, onChange, onClose }: LightboxPro
           onClick={() => onChange(activeIndex - 1)}
           aria-label="上一张"
         >
-          <span aria-hidden="true">‹</span>
+          <span aria-hidden="true"><ChevronLeft size={36} strokeWidth={1.5} /></span>
         </button>
       ) : null}
       {canGoNext ? (
@@ -69,11 +70,11 @@ export const Lightbox = ({ images, activeIndex, onChange, onClose }: LightboxPro
           onClick={() => onChange(activeIndex + 1)}
           aria-label="下一张"
         >
-          <span aria-hidden="true">›</span>
+          <span aria-hidden="true"><ChevronRight size={36} strokeWidth={1.5} /></span>
         </button>
       ) : null}
       <button type="button" className={styles.close} onClick={onClose} aria-label="关闭">
-        <span aria-hidden="true">×</span>
+        <span aria-hidden="true"><X size={30} strokeWidth={1.5} /></span>
       </button>
     </div>
   );
