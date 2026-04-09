@@ -3,21 +3,20 @@
   grid-template-columns: 42px minmax(0, 1fr);
   gap: 14px;
   padding: 20px 16px;
-  border-bottom: 1px solid rgb(0 0 0 / 4%);
-  background: #ffffff;
+  border-bottom: 1px solid var(--hairline);
+  background: #fdfdfd;
 }
 
 .authorAvatar {
   width: 40px;
   height: 40px;
-  border-radius: 50%;
-  background: #2a2d32;
-  color: #ffffff;
+  border-radius: 2px;
+  background: #fdfdfd;
+  color: #333333;
   display: grid;
   place-items: center;
-  font-weight: 700;
-  box-shadow: 0 2px 8px rgb(0 0 0 / 4%);
-  border: 1px solid #f5f6f8;
+  font-weight: 500;
+    border: 1px solid #f5f6f8;
 }
 
 .body {
@@ -39,14 +38,14 @@
 
 .author {
   margin: 0;
-  color: #111418;
-  font-size: 15px;
+  color: #333333;
+  font-size: 17px;
   font-weight: 600;
   line-height: 1.25;
 }
 
 .timestamp {
-  color: #8a93a3;
+  color: #888888;
   font-size: 13px;
   font-weight: 400;
 }
@@ -55,29 +54,32 @@
   display: inline-flex;
   align-items: center;
   gap: 3px;
-  border-radius: 999px;
-  background: #f5f6f8;
-  color: #5f6878;
-  padding: 2px 8px;
+  border-radius: 2px;
+  background: transparent;
+  color: #888888;
+  padding: 2px 4px;
   font-size: 12px;
   font-weight: 500;
 }
 
 .favoriteMark {
-  border: 1px solid rgb(47 111 82 / 20%);
-  border-radius: 999px;
-  background: #edf6f1;
-  color: #2f6f52;
-  padding: 1px 7px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  border-radius: 2px;
+  background: transparent;
+  color: #888888;
+  padding: 2px 4px;
   font-size: 12px;
+  font-weight: 500;
 }
 
 .content {
-  margin: 0 0 12px;
+  margin: 0 0 16px;
   white-space: pre-wrap;
-  line-height: 1.65;
-  font-size: 15px;
-  color: #222222;
+  line-height: 1.8;
+  font-size: 16px;
+  color: #333333;
 }
 
 .mediaGrid {
@@ -91,9 +93,9 @@
 .mediaItem {
   border: 0;
   padding: 0;
-  background: #f2f3f5;
+  background: #fafafa;
   overflow: hidden;
-  border-radius: 6px;
+  border-radius: 2px;
   aspect-ratio: 1;
 }
 
@@ -127,7 +129,7 @@
   width: min(100%, 270px);
   aspect-ratio: 16 / 10;
   border: 0;
-  border-radius: 4px;
+  border-radius: 2px;
   overflow: hidden;
   background: #15171a;
 }
@@ -135,7 +137,7 @@
 .videoPreview {
   position: relative;
   padding: 0;
-  color: #ffffff;
+  color: #333333;
 }
 
 .videoPreview img {
@@ -151,15 +153,17 @@
   inset: 0;
   display: grid;
   place-items: center;
-  font-weight: 700;
+  font-weight: 500;
+  color: #ffffff;
 }
 
 .duration {
   position: absolute;
   right: 8px;
   bottom: 6px;
-  border-radius: 4px;
+  border-radius: 2px;
   background: rgb(0 0 0 / 62%);
+  color: #ffffff;
   padding: 2px 6px;
   font-size: 12px;
 }
@@ -176,17 +180,17 @@
   width: min(100%, 320px);
   min-height: 70px;
   padding: 8px;
-  background: #ffffff;
-  border: 1px solid #e1e4ea;
-  border-radius: 10px;
-  color: inherit;
+  background: #fdfdfd;
+  border: 1px solid var(--hairline);
+  border-radius: 2px;
+  color: #333333;
   text-decoration: none;
   transition: border-color 0.2s;
 }
 
 .articleCard:hover,
 .musicCard:hover {
-  border-color: #cad0dc;
+  border-color: #aaaaaa;
 }
 
 .articleCard img,
@@ -195,7 +199,7 @@
 .musicCover {
   width: 54px;
   height: 54px;
-  border-radius: 3px;
+  border-radius: 2px;
   object-fit: cover;
   background: #d9dee8;
 }
@@ -205,13 +209,13 @@
   display: grid;
   place-items: center;
   color: var(--wechat-link);
-  font-weight: 700;
+  font-weight: 500;
 }
 
 .musicCover {
-  border-radius: 6px;
+  border-radius: 2px;
   background: #2b3340;
-  color: #ffffff;
+  color: #333333;
   font-size: 22px;
 }
 
@@ -258,17 +262,17 @@
 }
 
 .tag {
-  border: 1px solid #e1e4ea;
-  border-radius: 999px;
-  background: #ffffff;
-  color: #5f6878;
+  border: 1px solid var(--hairline);
+  border-radius: 2px;
+  background: #fdfdfd;
+  color: #888888;
   padding: 4px 10px;
   font-size: 12px;
   transition: background-color 0.2s;
 }
 
 .tag:hover {
-  background: #f5f6f8;
+  background: transparent;
 }
 
 .location {
@@ -306,16 +310,19 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 30px;
-  height: 20px;
+  width: 32px;
+  height: 24px;
   border: 0;
-  border-radius: 4px;
-  background: #eef1f5;
-  color: var(--wechat-link);
+  border-radius: 2px;
+  background: transparent;
+  color: #888888;
+  transition: all 0.2s ease;
 }
 
+.moreButton:hover,
 .moreButton[aria-expanded='true'] {
-  background: #dfe5ee;
+  background: #f5f5f5;
+  color: #333333;
 }
 
 .actionMenu {
@@ -325,12 +332,9 @@
   z-index: 3;
   display: flex;
   overflow: hidden;
-  border-radius: 16px;
-  background: rgb(255 255 255 / 90%);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  box-shadow: 0 12px 32px rgb(0 0 0 / 8%), 0 1px 2px rgb(0 0 0 / 4%);
-  border: 1px solid rgba(0, 0, 0, 0.04);
+  border-radius: 2px;
+  background: #fdfdfd;
+  border: 1px solid var(--hairline);
   animation: menuIn 150ms cubic-bezier(0.16, 1, 0.3, 1);
   padding: 4px;
   gap: 2px;
@@ -343,9 +347,9 @@
   gap: 6px;
   min-width: 64px;
   border: 0;
-  border-radius: 12px;
+  border-radius: 2px;
   background: transparent;
-  color: #111418;
+  color: #333333;
   padding: 6px 12px;
   font-size: 13px;
   font-weight: 500;
@@ -355,12 +359,12 @@
 }
 
 .actionMenu button:hover {
-  background: #f5f6f8;
+  background: transparent;
 }
 
 .actionMenu button span {
   display: inline-flex;
-  color: #5f6878;
+  color: #888888;
 }
 
 @keyframes menuIn {
@@ -383,7 +387,7 @@
 
 .ownerActions button {
   border: 0;
-  border-radius: 5px;
+  border-radius: 2px;
   background: #f0f2f5;
   color: var(--wechat-link);
   padding: 5px 9px;
@@ -393,29 +397,32 @@
 .comments {
   position: relative;
   margin-top: 12px;
-  background: #f5f6f8;
-  border-radius: 12px;
+  background: transparent;
+  border-radius: 2px;
   padding: 10px 12px;
 }
 
 .likes {
-  display: flex;
-  align-items: flex-start;
-  gap: 5px;
-  color: #111418;
-  font-size: 13px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #333333;
+  font-size: 14px;
   line-height: 1.45;
+  background: #fcfcfc;
+  border: 1px solid var(--hairline);
+  padding: 6px 10px;
+  border-radius: 2px;
 }
 
 .likes span {
-  margin-top: 1px;
-  color: #111418;
-  font-size: 12px;
+  color: #333333;
+  font-size: 13px;
   line-height: 1.4;
 }
 
 .likes strong {
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .state {
@@ -430,30 +437,30 @@
 
 .commentList {
   display: grid;
-  gap: 4px;
-  margin-top: 5px;
-  padding-top: 5px;
-  border-top: 1px solid #e1e4ea;
+  gap: 12px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--hairline);
 }
 
 .likes + .commentList,
 .likes + .state,
 .state + .commentList {
-  margin-top: 6px;
+  margin-top: 12px;
 }
 
 .comment {
   display: grid;
-  grid-template-columns: 18px minmax(0, 1fr);
-  gap: 6px;
+  grid-template-columns: 24px minmax(0, 1fr);
+  gap: 10px;
   align-items: start;
 }
 
 .comment img {
-  width: 18px;
-  height: 18px;
-  border-radius: 3px;
-  opacity: 0.72;
+  width: 24px;
+  height: 24px;
+  border-radius: 2px;
+  opacity: 0.85;
 }
 
 .comment p {
@@ -466,9 +473,9 @@
 
 .comment strong,
 .comment a {
-  color: #111418;
+  color: #333333;
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 500;
   text-decoration: none;
 }
 
@@ -482,16 +489,17 @@
 }
 
 .comment div div {
-  color: #222833;
-  font-size: 13px;
-  line-height: 1.45;
+  color: #333333;
+  font-size: 14px;
+  line-height: 1.6;
   white-space: pre-wrap;
+  margin-top: 2px;
 }
 
 .form {
   display: grid;
   gap: 8px;
-  border-top: 1px solid rgb(0 0 0 / 4%);
+  border-top: 1px solid var(--hairline);
   margin-top: 12px;
   padding-top: 12px;
 }
@@ -505,12 +513,12 @@
 .form input,
 .form textarea {
   width: 100%;
-  border: 1px solid transparent;
-  border-radius: 12px;
-  background: #f5f6f8;
+  border: 1px solid var(--hairline);
+  border-radius: 2px;
+  background: #fdfdfd;
   padding: 10px 12px;
-  color: #111418;
-  font-size: 13px;
+  color: #333333;
+  font-size: 14px;
   transition: all 0.2s;
 }
 
@@ -518,10 +526,8 @@
 .form textarea:focus {
   outline: none;
   background: #ffffff;
-  border-color: #cad0dc;
-  box-shadow: 0 2px 12px rgb(0 0 0 / 4%);
+  border-color: #aaaaaa;
 }
-
 .form textarea {
   resize: vertical;
 }
@@ -535,15 +541,15 @@
 }
 
 .actions small {
-  color: #8a93a3;
+  color: #888888;
   font-size: 11px;
 }
 
 .actions button {
   border: 0;
-  border-radius: 999px;
-  background: #111418;
-  color: #ffffff;
+  border-radius: 2px;
+  background: transparent;
+  color: #333333;
   padding: 6px 16px;
   font-size: 13px;
   font-weight: 500;

@@ -1,12 +1,12 @@
 .shell {
   min-height: 100vh;
-  background: #ffffff;
+  background: #fdfdfd;
 }
 
 .phoneFrame {
   width: 100%;
   min-height: 100vh;
-  background: #ffffff;
+  background: #fdfdfd;
 }
 
 .cover {
@@ -35,7 +35,7 @@
   border: 0;
   background: transparent;
   padding: 0;
-  color: inherit;
+  color: #333333;
 }
 
 .profileText {
@@ -46,33 +46,32 @@
 
 .profileName {
   margin: 0;
-  font-size: 26px;
-  font-weight: 800;
+  font-size: 32px;
+  font-weight: 500;
   letter-spacing: -0.02em;
-  color: #111418;
+  color: #333333;
   line-height: 1.2;
 }
 
 .profileBio {
   margin: 0;
   font-size: 14px;
-  color: #5f6878;
+  color: #888888;
   line-height: 1.5;
 }
 
 .avatar {
   width: 64px;
   height: 64px;
-  border-radius: 50%;
+  border-radius: 2px;
   background: #1f6f50;
-  color: #ffffff;
+  color: #333333;
   display: grid;
   place-items: center;
   font-size: 24px;
-  font-weight: 700;
+  font-weight: 500;
   border: 2px solid #ffffff;
-  box-shadow: 0 4px 14px rgb(0 0 0 / 6%);
-}
+  }
 
 .profileSheet {
   position: fixed;
@@ -104,11 +103,10 @@
   position: relative;
   z-index: 1;
   width: 100%;
-  border-radius: 24px 24px 0 0;
-  background: #ffffff;
+  border-radius: 0;
+  background: #fdfdfd;
   padding: 18px 16px calc(20px + env(safe-area-inset-bottom));
-  box-shadow: 0 -14px 40px rgb(15 23 42 / 16%);
-  animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .profileCardHeader {
@@ -128,20 +126,20 @@
   width: 58px;
   height: 58px;
   flex: 0 0 auto;
-  border-radius: 14px;
+  border-radius: 2px;
   background: #1f6f50;
-  color: #ffffff;
+  color: #333333;
   display: grid;
   place-items: center;
   font-size: 24px;
-  font-weight: 700;
+  font-weight: 500;
 }
 
 .profileCardName {
   margin: 0 0 4px;
-  color: #1f2329;
+  color: #333333;
   font-size: 18px;
-  font-weight: 700;
+  font-weight: 500;
 }
 
 .profileCardBio {
@@ -167,9 +165,9 @@
 .profileClose {
   flex: 0 0 auto;
   border: 1px solid #dde2ea;
-  border-radius: 999px;
+  border-radius: 2px;
   background: #f7f8fa;
-  color: #5f6878;
+  color: #888888;
   padding: 6px 12px;
   font-size: 12px;
 }
@@ -189,9 +187,9 @@
 
 .ownerTitle {
   margin: 0;
-  color: #1f2329;
+  color: #333333;
   font-size: 15px;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .ownerHint {
@@ -209,7 +207,7 @@
 .ownerForm input {
   min-width: 0;
   border: 1px solid #d8dee8;
-  border-radius: 12px;
+  border-radius: 2px;
   background: #f8f9fb;
   padding: 10px 12px;
   font-size: 13px;
@@ -228,7 +226,7 @@
 
 .ownerPrimaryButton,
 .ownerSecondaryButton {
-  border-radius: 999px;
+  border-radius: 2px;
   padding: 8px 14px;
   font-size: 13px;
 }
@@ -241,22 +239,20 @@
 
 .ownerSecondaryButton {
   border: 1px solid #dce1ea;
-  background: #ffffff;
-  color: #5f6878;
+  background: #fdfdfd;
+  color: #888888;
 }
 
 .timeline {
-  background: #ffffff;
+  background: #fdfdfd;
 }
 
 .timelineTools {
   position: sticky;
   top: 0;
   z-index: 5;
-  background: rgb(255 255 255 / 85%);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  box-shadow: 0 4px 24px rgb(0 0 0 / 2%);
+  background: #fdfdfd;
+  border-bottom: 1px solid var(--hairline);
 }
 
 .toolRow {
@@ -268,45 +264,54 @@
 
 .modeTabs {
   display: flex;
-  gap: 4px;
-  background: #f5f6f8;
-  padding: 4px;
-  border-radius: 999px;
+  gap: 16px;
+  background: transparent;
+  padding: 0;
 }
 
 .modeTabs button {
   border: 0;
   background: transparent;
-  padding: 6px 14px;
-  color: #8a93a3;
-  font-size: 13px;
-  font-weight: 500;
-  border-radius: 999px;
-  transition: all 0.2s ease;
+  padding: 4px 0;
+  color: #888888;
+  font-size: 14px;
+  font-weight: 400;
+  border-radius: 0;
+  transition: color 0.2s ease;
+  position: relative;
 }
 
 .modeTabs button.activeMode {
-  background: #ffffff;
-  color: #111418;
-  font-weight: 600;
-  box-shadow: 0 2px 8px rgb(0 0 0 / 4%);
+  background: transparent;
+  color: #333333;
+  font-weight: 500;
+}
+
+.modeTabs button.activeMode::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: #333333;
 }
 
 .filterTrigger {
   border: 0;
   background: transparent;
   padding: 6px;
-  color: #5f6878;
+  color: #888888;
   transition: color 0.2s;
-  border-radius: 50%;
+  border-radius: 2px;
 }
 
 .filterTrigger:hover {
-  background: #f5f6f8;
+  background: transparent;
 }
 
 .filterTrigger.activeTrigger {
-  color: #111418;
+  color: #333333;
 }
 
 .filterIconWrap {
@@ -322,8 +327,8 @@
   right: -2px;
   width: 6px;
   height: 6px;
-  border-radius: 50%;
-  background: #111418;
+  border-radius: 2px;
+  background: transparent;
   border: 1.5px solid #ffffff;
 }
 
@@ -348,7 +353,7 @@
 }
 
 .filterLabel {
-  color: #8a93a3;
+  color: #888888;
   font-size: 12px;
   font-weight: 500;
   text-transform: uppercase;
@@ -362,29 +367,29 @@
 }
 
 .filterChip {
-  border: 1px solid #e1e4ea;
-  border-radius: 999px;
-  background: #ffffff;
-  color: #5f6878;
+  border: 1px solid var(--hairline);
+  border-radius: 2px;
+  background: #fdfdfd;
+  color: #888888;
   padding: 6px 14px;
   font-size: 13px;
   transition: all 0.2s ease;
 }
 
 .filterChip:hover {
-  border-color: #cad0dc;
+  border-color: #aaaaaa;
 }
 
 .filterChip.activeChip {
-  background: #111418;
-  color: #ffffff;
-  border-color: #111418;
+  background: transparent;
+  color: #333333;
+  border-color: #333333;
   font-weight: 500;
 }
 
 .album {
   padding: 16px;
-  background: #ffffff;
+  background: #fdfdfd;
 }
 
 .masonryGrid {
@@ -403,9 +408,9 @@
   position: relative;
   overflow: hidden;
   border: 0;
-  background: #f2f3f5;
+  background: #fafafa;
   padding: 0;
-  border-radius: 12px;
+  border-radius: 2px;
   width: 100%;
 }
 
@@ -432,14 +437,14 @@
 }
 
 .masonryOverlay span {
-  color: #ffffff;
+  color: #333333;
   font-size: 11px;
   font-weight: 500;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
 }
 
 .videoMode {
-  background: #ffffff;
+  background: #fdfdfd;
   padding-bottom: 24px;
 }
 
@@ -460,7 +465,7 @@
 .cinematicPlayer {
   width: 100%;
   aspect-ratio: 16 / 10;
-  background: #111418;
+  background: transparent;
 }
 
 .cinematicPreview {
@@ -497,9 +502,8 @@
   position: absolute;
   right: 16px;
   bottom: 16px;
-  border-radius: 999px;
+  border-radius: 2px;
   background: rgb(0 0 0 / 60%);
-  backdrop-filter: blur(8px);
   color: #ffffff;
   padding: 4px 10px;
   font-size: 13px;
@@ -533,26 +537,26 @@
 
 .cinematicAuthor {
   margin: 0;
-  color: #111418;
+  color: #333333;
   font-size: 15px;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1.25;
 }
 
 .cinematicTimestamp {
-  color: #8a93a3;
+  color: #888888;
   font-size: 13px;
   font-weight: 400;
 }
 
 .cinematicLocation {
-  color: #8a93a3;
+  color: #888888;
   font-size: 12px;
 }
 
 .cinematicContent {
   margin: 0;
-  color: #222222;
+  color: #333333;
   font-size: 15px;
   line-height: 1.6;
 }
@@ -565,7 +569,7 @@
 }
 
 .cinematicTag {
-  color: #8a93a3;
+  color: #888888;
   font-size: 13px;
   font-weight: 500;
 }
@@ -592,7 +596,7 @@
 .loadingDots span {
   width: 6px;
   height: 6px;
-  border-radius: 50%;
+  border-radius: 2px;
   background-color: #c0c6d4;
   animation: loadingDots 1.4s infinite ease-in-out both;
 }
@@ -620,7 +624,7 @@
 .endDot {
   width: 4px;
   height: 4px;
-  border-radius: 50%;
+  border-radius: 2px;
   background-color: #dce1ea;
 }
 
@@ -653,13 +657,13 @@
   }
 
   .profileName {
-    font-size: 28px;
+    font-size: 36px;
   }
 
   .profileCard {
     width: min(100%, 560px);
     margin: 0 auto;
-    border-radius: 24px 24px 0 0;
+    border-radius: 0;
   }
 
   .toolRow {

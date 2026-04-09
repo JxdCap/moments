@@ -15,7 +15,7 @@
   display: grid;
   place-items: center;
   background: rgb(0 0 0 / 96%);
-  color: #ffffff;
+  color: #333333;
   touch-action: none;
   animation: fadeIn 0.2s ease-out;
 }
@@ -43,14 +43,14 @@
   position: absolute;
   z-index: 2;
   border: 0;
-  color: #ffffff;
+  color: #333333;
 }
 
 .counter {
   top: max(12px, env(safe-area-inset-top));
   left: 50%;
   transform: translateX(-50%);
-  border-radius: 6px;
+  border-radius: 2px;
   background: rgb(0 0 0 / 22%);
   padding: 4px 9px;
   color: rgb(255 255 255 / 72%);
@@ -61,7 +61,7 @@
   right: 56px;
   bottom: max(16px, env(safe-area-inset-bottom));
   border: 1px solid rgb(255 255 255 / 16%);
-  border-radius: 6px;
+  border-radius: 2px;
   background: rgb(0 0 0 / 20%);
   padding: 6px 10px;
   color: rgb(255 255 255 / 62%);
@@ -81,7 +81,7 @@
   width: 36px;
   height: 36px;
   place-items: center;
-  border-radius: 6px;
+  border-radius: 2px;
   background: transparent;
   color: rgb(255 255 255 / 68%);
   font-size: 30px;
@@ -110,7 +110,7 @@
   width: 42px;
   height: 42px;
   place-items: center;
-  border-radius: 6px;
+  border-radius: 2px;
   background: rgb(0 0 0 / 8%);
   opacity: 0;
   transition: opacity 120ms ease;
