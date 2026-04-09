@@ -3,7 +3,7 @@ import { Lightbox } from './Lightbox';
 import { MomentCard } from './MomentCard';
 import type { usePosts } from '../hooks/usePosts';
 import type { MomentMedia, MomentPost } from '../types/moment';
-import { formatMomentTime } from '../utils/date';
+import { formatDuration, formatMomentTime } from '../utils/date';
 import styles from '../app/App.module.css';
 
 type TimelineProps = {
@@ -11,7 +11,7 @@ type TimelineProps = {
   isOwner: boolean;
 };
 
-type ViewMode = 'timeline' | 'photos';
+type ViewMode = 'timeline' | 'photos' | 'videos';
 
 type AlbumImage = {
   image: MomentMedia;
@@ -47,6 +47,9 @@ const TimelineControls = ({
       </button>
       <button type="button" className={viewMode === 'photos' ? styles.activeMode : ''} onClick={() => onChangeMode('photos')}>
         照片
+      </button>
+      <button type="button" className={viewMode === 'videos' ? styles.activeMode : ''} onClick={() => onChangeMode('videos')}>
+        视频
       </button>
     </div>
 
@@ -101,6 +104,83 @@ const AlbumView = ({ images }: { images: AlbumImage[] }) => {
   );
 };
 
+const VideoView = ({ posts }: { posts: MomentPost[] }) => {
+  const [activeVideoId, setActiveVideoId] = useState<string | null>(null);
+  const heroPost = posts[0];
+  const listPosts = posts.slice(1);
+
+  if (!heroPost) {
+    return <div className={styles.state}>这个范围里还没有视频。</div>;
+  }
+
+  return (
+    <section className={styles.videoMode} aria-label="视频模式">
+      <header className={styles.videoHero}>
+        <div className={styles.videoHeroCopy}>
+          <p className={styles.videoHeroEyebrow}>视频</p>
+          <h2>把会动的片段单独留出来</h2>
+          <span>{posts.length} 条视频动态</span>
+        </div>
+
+        <div className={styles.videoHeroMedia}>
+          {activeVideoId === heroPost.id && heroPost.video ? (
+            <video className={styles.videoHeroPlayer} src={heroPost.video} controls autoPlay poster={heroPost.videoCover}>
+              当前浏览器不支持视频播放。
+            </video>
+          ) : (
+            <button type="button" className={styles.videoHeroPreview} onClick={() => setActiveVideoId(heroPost.id)}>
+              {heroPost.videoCover ? <img src={heroPost.videoCover} alt="" loading="lazy" /> : null}
+              <span className={styles.videoHeroPlay}>播放视频</span>
+              {heroPost.videoDuration ? <span className={styles.videoHeroDuration}>{formatDuration(heroPost.videoDuration)}</span> : null}
+            </button>
+          )}
+        </div>
+      </header>
+
+      {listPosts.length > 0 ? (
+        <div className={styles.videoList}>
+          {listPosts.map((post) => {
+            const isPlaying = activeVideoId === post.id;
+
+            return (
+              <article key={post.id} className={styles.videoCard}>
+                <div className={styles.videoCardMedia}>
+                  {isPlaying && post.video ? (
+                    <video className={styles.videoCardPlayer} src={post.video} controls autoPlay poster={post.videoCover}>
+                      当前浏览器不支持视频播放。
+                    </video>
+                  ) : (
+                    <button type="button" className={styles.videoCardPreview} onClick={() => setActiveVideoId(post.id)}>
+                      {post.videoCover ? <img src={post.videoCover} alt="" loading="lazy" /> : null}
+                      <span className={styles.videoCardPlay}>播放</span>
+                      {post.videoDuration ? <span className={styles.videoCardDuration}>{formatDuration(post.videoDuration)}</span> : null}
+                    </button>
+                  )}
+                </div>
+
+                <div className={styles.videoCardBody}>
+                  {post.content ? <p className={styles.videoCardContent}>{post.content}</p> : null}
+                  <div className={styles.videoCardMeta}>
+                    <span>{formatMomentTime(post.publishedAt)}</span>
+                    {post.location ? <span>{post.location}</span> : null}
+                  </div>
+                  {post.tags.length > 0 ? (
+                    <div className={styles.videoCardTags}>
+                      {post.tags.map((tag) => (
+                        <span key={tag}>#{tag}</span>
+                      ))}
+                    </div>
+                  ) : null}
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      ) : null}
+    </section>
+  );
+};
+
 export const Timeline = ({ postsState, isOwner }: TimelineProps) => {
   const [activeTag, setActiveTag] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<ViewMode>('timeline');
@@ -110,6 +190,7 @@ export const Timeline = ({ postsState, isOwner }: TimelineProps) => {
     [activeTag, postsState.posts],
   );
   const albumImages = useMemo(() => collectAlbumImages(filteredPosts), [filteredPosts]);
+  const videoPosts = useMemo(() => filteredPosts.filter((post) => post.type === 'video'), [filteredPosts]);
 
   if (postsState.isLoading) {
     return <div className={styles.state}>正在加载朋友圈...</div>;
@@ -143,6 +224,8 @@ export const Timeline = ({ postsState, isOwner }: TimelineProps) => {
 
       {viewMode === 'photos' ? (
         <AlbumView images={albumImages} />
+      ) : viewMode === 'videos' ? (
+        <VideoView posts={videoPosts} />
       ) : filteredPosts.length > 0 ? (
         <div className={styles.timeline}>
           {filteredPosts.map((post) => (
