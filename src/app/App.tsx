@@ -44,7 +44,7 @@ export const App = () => {
               </div>
             </button>
             <div className={styles.profileText}>
-              <h1 className={styles.profileName}>站长的朋友圈</h1>
+              <h1 className={styles.profileName}>枫叶 - JxdCap</h1>
               <p className={styles.profileBio}>只记录真实发生的小事</p>
             </div>
           </div>
@@ -63,7 +63,7 @@ export const App = () => {
                   朋
                 </div>
                 <div>
-                  <p className={styles.profileCardName}>站长的朋友圈</p>
+                  <p className={styles.profileCardName}>枫叶 - JxdCap</p>
                   <p className={styles.profileCardBio}>只记录真实发生的小事</p>
                 </div>
               </div>

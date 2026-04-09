@@ -183,12 +183,12 @@ export const MomentCard = ({ post, isOwner, isFavorited, onSave, onDelete, onTog
   return (
     <article className={styles.card}>
       <div className={styles.authorAvatar} aria-hidden="true">
-        站
+        枫
       </div>
       <div className={styles.body}>
         <div className={styles.topLine}>
           <div className={styles.authorWrap}>
-            <h2 className={styles.author}>站长</h2>
+            <h2 className={styles.author}>枫叶</h2>
             <span className={styles.timestamp}>· {formatMomentTime(post.publishedAt)}</span>
           </div>
           {post.isPinned ? (

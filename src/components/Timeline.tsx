@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState, useRef, useCallback } from 'react';
-import { Play, ListFilter } from 'lucide-react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { Play, ListFilter, X } from 'lucide-react';
 import { Lightbox } from './Lightbox';
 import { MomentCard } from './MomentCard';
 import type { usePosts } from '../hooks/usePosts';
@@ -24,6 +24,8 @@ type AlbumImage = {
   post: MomentPost;
   imageIndex: number;
 };
+
+type ViewTransitionDirection = 'forward' | 'backward';
 
 const collectTags = (posts: MomentPost[]) =>
   Array.from(new Set(posts.flatMap((post) => post.tags))).sort((first, second) => first.localeCompare(second, 'zh-Hans-CN'));
@@ -67,11 +69,54 @@ const TimelineControls = ({
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const activeFilterCount = Number(favoritesOnly) + Number(Boolean(activeMonth)) + Number(Boolean(activeTag));
+  const modeTabsClassName = `${styles.modeTabs} ${
+    viewMode === 'timeline' ? styles.modeTabsTimeline : viewMode === 'photos' ? styles.modeTabsPhotos : styles.modeTabsVideos
+  }`;
+
+  useEffect(() => {
+    if (!isExpanded) {
+      return;
+    }
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setIsExpanded(false);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isExpanded]);
+
+  const handleSelectTag = (tag: string) => {
+    onSelectTag(tag);
+    setIsExpanded(false);
+  };
+
+  const handleClearTag = () => {
+    onClearTag();
+    setIsExpanded(false);
+  };
+
+  const handleSelectMonth = (month: string) => {
+    onSelectMonth(month);
+    setIsExpanded(false);
+  };
+
+  const handleClearMonth = () => {
+    onClearMonth();
+    setIsExpanded(false);
+  };
+
+  const handleToggleFavorites = () => {
+    onToggleFavoritesOnly();
+    setIsExpanded(false);
+  };
 
   return (
     <div className={styles.timelineTools}>
       <div className={styles.toolRow}>
-        <div className={styles.modeTabs} aria-label="浏览模式">
+        <div className={modeTabsClassName} aria-label="浏览模式">
           <button type="button" className={viewMode === 'timeline' ? styles.activeMode : ''} onClick={() => onChangeMode('timeline')}>
             全部
           </button>
@@ -81,6 +126,7 @@ const TimelineControls = ({
           <button type="button" className={viewMode === 'videos' ? styles.activeMode : ''} onClick={() => onChangeMode('videos')}>
             视频
           </button>
+          <span className={styles.modeIndicator} aria-hidden="true" />
         </div>
 
         <button
@@ -97,52 +143,61 @@ const TimelineControls = ({
       </div>
 
       {isExpanded ? (
-        <div id="timeline-filter-panel" className={styles.filterPanel}>
-          <div className={styles.filterSection}>
-            <span className={styles.filterLabel}>类型</span>
-            <div className={styles.filterOptions}>
-              <button 
-                type="button" 
-                className={`${styles.filterChip} ${favoritesOnly ? styles.activeChip : ''}`}
-                onClick={onToggleFavoritesOnly}
-              >
-                仅收藏
+        <>
+          <button type="button" className={styles.filterBackdrop} onClick={() => setIsExpanded(false)} aria-label="关闭筛选层" />
+          <div id="timeline-filter-panel" className={styles.filterPanel}>
+            <div className={styles.filterPanelHeader}>
+              <span className={styles.filterPanelTitle}>筛选</span>
+              <button type="button" className={styles.filterClose} onClick={() => setIsExpanded(false)} aria-label="关闭筛选层">
+                <X size={16} strokeWidth={1.8} />
               </button>
             </div>
-          </div>
-          
-          {archiveMonths.length > 0 && (
             <div className={styles.filterSection}>
-              <span className={styles.filterLabel}>月份</span>
+              <span className={styles.filterLabel}>类型</span>
               <div className={styles.filterOptions}>
-                <button type="button" className={`${styles.filterChip} ${!activeMonth ? styles.activeChip : ''}`} onClick={onClearMonth}>
-                  全部
+                <button
+                  type="button"
+                  className={`${styles.filterChip} ${favoritesOnly ? styles.activeChip : ''}`}
+                  onClick={handleToggleFavorites}
+                >
+                  仅收藏
                 </button>
-                {archiveMonths.map(month => (
-                  <button key={month} type="button" className={`${styles.filterChip} ${activeMonth === month ? styles.activeChip : ''}`} onClick={() => onSelectMonth(month)}>
-                    {month}
-                  </button>
-                ))}
               </div>
             </div>
-          )}
 
-          {tags.length > 0 && (
-            <div className={styles.filterSection}>
-              <span className={styles.filterLabel}>标签</span>
-              <div className={styles.filterOptions}>
-                <button type="button" className={`${styles.filterChip} ${!activeTag ? styles.activeChip : ''}`} onClick={onClearTag}>
-                  全部
-                </button>
-                {tags.map(tag => (
-                  <button key={tag} type="button" className={`${styles.filterChip} ${activeTag === tag ? styles.activeChip : ''}`} onClick={() => onSelectTag(tag)}>
-                    #{tag}
+            {archiveMonths.length > 0 && (
+              <div className={styles.filterSection}>
+                <span className={styles.filterLabel}>月份</span>
+                <div className={styles.filterOptions}>
+                  <button type="button" className={`${styles.filterChip} ${!activeMonth ? styles.activeChip : ''}`} onClick={handleClearMonth}>
+                    全部
                   </button>
-                ))}
+                  {archiveMonths.map((month) => (
+                    <button key={month} type="button" className={`${styles.filterChip} ${activeMonth === month ? styles.activeChip : ''}`} onClick={() => handleSelectMonth(month)}>
+                      {month}
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
-        </div>
+            )}
+
+            {tags.length > 0 && (
+              <div className={styles.filterSection}>
+                <span className={styles.filterLabel}>标签</span>
+                <div className={styles.filterOptions}>
+                  <button type="button" className={`${styles.filterChip} ${!activeTag ? styles.activeChip : ''}`} onClick={handleClearTag}>
+                    全部
+                  </button>
+                  {tags.map((tag) => (
+                    <button key={tag} type="button" className={`${styles.filterChip} ${activeTag === tag ? styles.activeChip : ''}`} onClick={() => handleSelectTag(tag)}>
+                      #{tag}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </>
       ) : null}
     </div>
   );
@@ -250,7 +305,7 @@ const VideoView = ({
               <div className={styles.cinematicBody}>
                 <div className={styles.cinematicTop}>
                   <div className={styles.cinematicAuthorWrap}>
-                    <h2 className={styles.cinematicAuthor}>站长</h2>
+                    <h2 className={styles.cinematicAuthor}>枫叶</h2>
                     <span className={styles.cinematicTimestamp}>· {formatMomentTime(post.publishedAt)}</span>
                   </div>
                   {post.location ? <span className={styles.cinematicLocation}>{post.location}</span> : null}
@@ -273,11 +328,18 @@ const VideoView = ({
 };
 
 export const Timeline = ({ postsState, isOwner }: TimelineProps) => {
+  const viewModeOrder: Record<TimelineViewMode, number> = {
+    timeline: 0,
+    photos: 1,
+    videos: 2,
+  };
   const initialPreferences = useMemo(() => loadTimelinePreferences(), []);
   const [activeTag, setActiveTag] = useState<string | null>(initialPreferences.activeTag);
   const [activeMonth, setActiveMonth] = useState<string | null>(initialPreferences.activeMonth);
   const [favoritesOnly, setFavoritesOnly] = useState(false);
   const [viewMode, setViewMode] = useState<TimelineViewMode>(initialPreferences.viewMode);
+  const [exitingViewMode, setExitingViewMode] = useState<TimelineViewMode | null>(null);
+  const [transitionDirection, setTransitionDirection] = useState<ViewTransitionDirection>('forward');
   const [favoritePostIds, setFavoritePostIds] = useState<Set<string>>(() => new Set(loadFavoritePostIds()));
   const tags = useMemo(() => collectTags(postsState.posts), [postsState.posts]);
   const archiveMonths = useMemo(() => collectArchiveMonths(postsState.posts), [postsState.posts]);
@@ -306,10 +368,6 @@ export const Timeline = ({ postsState, isOwner }: TimelineProps) => {
   );
   const albumImages = useMemo(() => collectAlbumImages(filteredPosts), [filteredPosts]);
   const videoPosts = useMemo(() => filteredPosts.filter((post) => post.type === 'video'), [filteredPosts]);
-  const favoriteVideoCount = useMemo(
-    () => videoPosts.filter((post) => favoritePostIds.has(post.id)).length,
-    [favoritePostIds, videoPosts],
-  );
 
   const observerRef = useRef<HTMLDivElement>(null);
 
@@ -354,6 +412,15 @@ export const Timeline = ({ postsState, isOwner }: TimelineProps) => {
     setFavoritesOnly(false);
   }, [favoriteCount, favoritesOnly]);
 
+  useEffect(() => {
+    if (!exitingViewMode) {
+      return;
+    }
+
+    const timeout = window.setTimeout(() => setExitingViewMode(null), 300);
+    return () => window.clearTimeout(timeout);
+  }, [exitingViewMode, viewMode]);
+
   const handleToggleFavorite = (postId: string) => {
     setFavoritePostIds((current) => {
       const next = new Set(current);
@@ -367,6 +434,48 @@ export const Timeline = ({ postsState, isOwner }: TimelineProps) => {
       saveFavoritePostIds(next);
       return next;
     });
+  };
+
+  const handleChangeMode = (nextMode: TimelineViewMode) => {
+    if (nextMode === viewMode) {
+      return;
+    }
+
+    setTransitionDirection(viewModeOrder[nextMode] > viewModeOrder[viewMode] ? 'forward' : 'backward');
+    setExitingViewMode(viewMode);
+    setViewMode(nextMode);
+  };
+
+  const renderView = (mode: TimelineViewMode) => {
+    if (mode === 'photos') {
+      return <AlbumView images={albumImages} />;
+    }
+
+    if (mode === 'videos') {
+      return <VideoView posts={videoPosts} />;
+    }
+
+    if (filteredPosts.length > 0) {
+      return (
+        <div className={styles.timeline}>
+          {filteredPosts.map((post) => (
+            <MomentCard
+              key={post.id}
+              post={post}
+              isOwner={isOwner}
+              isFavorited={favoritePostIds.has(post.id)}
+              onSave={postsState.savePost}
+              onDelete={postsState.removePost}
+              onTogglePinned={postsState.togglePinned}
+              onToggleLike={postsState.toggleLike}
+              onToggleFavorite={handleToggleFavorite}
+            />
+          ))}
+        </div>
+      );
+    }
+
+    return <div className={styles.state}>{emptyMessage}</div>;
   };
 
   const emptyMessage = favoritesOnly ? '收藏夹里暂时还没有这一段记录。' : '这一段筛选里还没有新的记录。';
@@ -402,35 +511,35 @@ export const Timeline = ({ postsState, isOwner }: TimelineProps) => {
         favoriteCount={favoriteCount}
         onSelectTag={setActiveTag}
         onClearTag={() => setActiveTag(null)}
-        onChangeMode={setViewMode}
+        onChangeMode={handleChangeMode}
         onSelectMonth={setActiveMonth}
         onClearMonth={() => setActiveMonth(null)}
         onToggleFavoritesOnly={() => setFavoritesOnly((current) => !current)}
       />
 
-      {viewMode === 'photos' ? (
-        <AlbumView images={albumImages} />
-      ) : viewMode === 'videos' ? (
-        <VideoView posts={videoPosts} />
-      ) : filteredPosts.length > 0 ? (
-        <div className={styles.timeline}>
-          {filteredPosts.map((post) => (
-            <MomentCard
-              key={post.id}
-              post={post}
-              isOwner={isOwner}
-              isFavorited={favoritePostIds.has(post.id)}
-              onSave={postsState.savePost}
-              onDelete={postsState.removePost}
-              onTogglePinned={postsState.togglePinned}
-              onToggleLike={postsState.toggleLike}
-              onToggleFavorite={handleToggleFavorite}
-            />
-          ))}
+      <div className={styles.contentViewport}>
+        {exitingViewMode ? (
+          <div
+            className={`${styles.contentPane} ${
+              transitionDirection === 'forward' ? styles.paneExitForward : styles.paneExitBackward
+            }`}
+          >
+            {renderView(exitingViewMode)}
+          </div>
+        ) : null}
+
+        <div
+          className={`${styles.contentPane} ${
+            exitingViewMode
+              ? transitionDirection === 'forward'
+                ? styles.paneEnterForward
+                : styles.paneEnterBackward
+              : styles.paneActive
+          }`}
+        >
+          {renderView(viewMode)}
         </div>
-      ) : (
-        <div className={styles.state}>{emptyMessage}</div>
-      )}
+      </div>
 
       {postsState.hasMore ? (
         <div ref={observerRef} className={styles.loadMoreTarget}>
