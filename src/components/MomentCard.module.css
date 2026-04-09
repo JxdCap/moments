@@ -80,7 +80,12 @@
 }
 
 .single .mediaItem {
-  aspect-ratio: 4 / 3;
+  aspect-ratio: auto;
+}
+
+.single .mediaItem img {
+  height: auto;
+  object-fit: contain;
 }
 
 .double,
