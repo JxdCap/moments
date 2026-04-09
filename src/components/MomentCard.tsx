@@ -127,6 +127,10 @@ export const MomentCard = ({ post, isOwner, onSave, onDelete, onTogglePinned, on
     : post.likeCount > 0
       ? `${post.likeCount} 位访客`
       : '';
+  const showImageGrid = post.type === 'image' && post.images.length > 0;
+  const showVideoBlock = post.type === 'video';
+  const showArticleBlock = post.type === 'article';
+  const showMusicBlock = post.type === 'music';
 
   const handleDelete = async () => {
     if (!window.confirm('确定删除这条动态吗？')) {
@@ -181,10 +185,10 @@ export const MomentCard = ({ post, isOwner, onSave, onDelete, onTogglePinned, on
 
         <p className={styles.content}>{post.content}</p>
 
-        {post.type === 'image' ? <MediaGrid images={post.images} onPreview={setPreviewIndex} /> : null}
-        {post.type === 'video' ? <VideoBlock post={post} /> : null}
-        {post.type === 'article' ? <ArticleBlock post={post} /> : null}
-        {post.type === 'music' ? <MusicBlock post={post} /> : null}
+        {showImageGrid ? <MediaGrid images={post.images} onPreview={setPreviewIndex} /> : null}
+        {showVideoBlock ? <VideoBlock post={post} /> : null}
+        {showArticleBlock ? <ArticleBlock post={post} /> : null}
+        {showMusicBlock ? <MusicBlock post={post} /> : null}
 
         {post.tags.length > 0 ? (
           <div className={styles.tags}>

@@ -36,7 +36,7 @@ const mapPostRecord = (record: PostRecord): MomentPost => ({
   type: record.type,
   content: record.content,
   location: record.location,
-  images: mapMedia(record),
+  images: record.type === 'text' ? [] : mapMedia(record),
   video: getFileUrl(record, record.video),
   videoCover: getFileUrl(record, record.video_cover),
   videoDuration: record.video_duration,

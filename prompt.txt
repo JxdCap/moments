@@ -1,77 +1,89 @@
-基于当前项目实际状态执行本任务。先阅读并理解以下文件后再动手：src/services/demoData.ts、src/services/posts.ts、src/hooks/usePosts.ts、src/types/moment.ts、src/components/MomentCard.tsx、src/components/MomentCard.module.css。确认当前项目仍以本地 demo 数据为主展示，再执行本任务。
+基于当前项目实际状态执行本任务。先阅读并理解以下文件后再动手：src/types/moment.ts、src/services/demoData.ts、src/services/posts.ts、src/hooks/usePosts.ts、src/components/MomentCard.tsx、src/components/MomentCard.module.css。确认当前项目当前的纯文字动态仍是通过 `type: 'image' + images: []` 兼容显示后，再执行本任务。
 
-本轮目标非常单一：**为动态增加轻量位置字段展示，并补充对应 demo 数据。**  
-不要改照片模式，不要改标签筛选，不要改评论点赞逻辑，不要改动画，不要接 PocketBase，不要顺手重构，不要扩展无关功能。
+本轮目标非常单一：**正式加入 `text` 类型，让纯文字动态成为独立内容类型。**  
+不要改视觉风格，不要改动画，不要改照片模式，不要改标签筛选，不要改评论点赞逻辑，不要接 PocketBase，不要顺手重构，不要扩展无关功能。
 
 一、必须完成的内容
 
-1. 为动态增加位置字段
-在当前项目的数据结构中，增加一个轻量位置字段，用于表示动态发布地点。
-字段命名保持简洁清晰，例如 `location`，类型使用可选字符串即可。
+1. 正式加入 text 类型
+在当前项目中，将纯文字动态从“借用 image 类型兼容”改为正式的 `text` 类型。
 要求：
-- 不要引入复杂定位对象
-- 不要做经纬度
-- 不要做地图卡片
-- 只支持轻量文本位置展示，例如：
-  - 深圳·南山
-  - 上海·武康路
-  - 西湖边
-  - 公司楼下
+- 在 `PostType` 中新增 `text`
+- 保持现有其他类型不变：image / video / article / music
+- 不要引入额外复杂类型层次
+- 不要顺手改整个数据模型
 
-2. 数据层同步兼容
-在不接 PocketBase 的前提下，先打通本地 demo 数据链路。
-必要时同步更新：
-- src/types/moment.ts
-- src/services/demoData.ts
-- src/services/posts.ts
-但只做和 location 字段直接相关的最小改动。
-不要顺手改别的字段，不要重构 posts 服务。
+2. 更新类型定义
+在 `src/types/moment.ts` 中完成最小必要改动，使 `MomentPost`、`PostRecord` 等与 `text` 类型兼容。
+要求：
+- 只做和 `text` 类型直接相关的最小修改
+- 不要顺手重写字段结构
+- 不要破坏现有 image / video / article / music 的类型兼容性
 
-3. 卡片中展示位置
-在动态卡片中，把位置展示在一个合理且克制的位置：
-- 放在 tags 下方
-- 放在底部时间 / 来源 / 三点菜单上方
-- 若当前动态没有 location，则不显示任何占位
-视觉要求：
-- 轻量
-- 不抢正文和图片
-- 更像朋友圈里的补充信息，不像正文的一部分
-- 可配一个很轻的位置图标或纯文本前缀，但不要做重图标风格
+3. 更新 demo 数据
+在 `src/services/demoData.ts` 中，把当前用于“纯文字展示”的兼容动态改成真正的 `type: 'text'`
+并新增或整理若干 `text` 动态示例，确保当前页面中至少能看到：
+- 1 条纯文字短句
+- 1 条稍长一点的纯文字内容
+- 1 条带 tags 的纯文字动态
+- 若项目当前已有 location 字段，则至少 1 条 text 动态带 location
 
-4. 补充 demo 数据
-在现有 demoPosts 基础上，补充若干带 location 的示例，让页面中至少能看到：
-- 纯文字 + location
-- 单图 + location
-- 文字 + 单图 + location
-- 文字 + 多图 + location
-位置文案尽量自然，不要所有动态都带 location，避免显得假。
+4. 更新数据映射
+在 `src/services/posts.ts` 中，确保本地 demo 数据链路和未来 PocketBase 数据链路都能兼容 `text` 类型。
+要求：
+- 当前本地 demo 模式必须直接可用
+- 若 `mapPostRecord` / `mapPostPatchToRecord` 需要做最小调整，可以改
+- 不要重构 posts 服务整体结构
+- 不要改当前排序逻辑
 
-二、实现约束
+5. 更新卡片渲染
+在 `src/components/MomentCard.tsx` 中，让 `text` 类型成为明确支持的内容类型。
+要求：
+- `text` 类型的动态应正常显示正文
+- `text` 类型不应渲染图片网格
+- `text` 类型不应渲染视频块、文章卡片、音乐卡片
+- 保持 tags、location（若已有）、时间、来源、互动区、评论等其他现有结构继续正常工作
+- 不要为了支持 text 重写整个卡片组件
 
-1. 不要改 PostType 类型体系
-2. 不要新增页面或模式
-3. 不要改照片模式逻辑
-4. 不要改灯箱逻辑
-5. 不要改评论、点赞、作者模式逻辑
-6. 不要引入新依赖
-7. 不要做地图、经纬度、逆地理编码等复杂功能
-8. 不要为了 location 去重构整个数据模型
+二、显示要求
 
-三、显示要求
+1. `text` 类型动态在时间流中应与其他动态正常混排
+2. `text` 类型动态应只显示：
+- 昵称 / 作者信息
+- 正文
+- tags（如有）
+- location（如有）
+- 时间 / 来源 / 操作菜单
+- 点赞 / 评论区
+3. 不应出现空图片容器、空媒体区、空白占位
+4. 原本 image 类型的动态继续保持原状，不要被误伤
 
-1. location 在卡片中应明显可见，但存在感低于正文、图片和 tags
-2. 没有 location 的动态完全保持现状，不要出现空白占位
-3. 页面里至少能看到 3～4 条带 location 的 demo 动态
-4. 如果现有 demo 排序导致新增示例过于靠后，可适度调整发布时间，但不要破坏现有置顶逻辑
+三、PocketBase 兼容要求
 
-四、完成后要求
+1. 当前仍然不需要正式接入 PocketBase
+2. 但新增的 `text` 类型不能把未来 PocketBase 对接路线堵死
+3. `PostRecord.type` 应兼容 `text`
+4. 不要新增复杂迁移逻辑；只保证当前代码结构在以后接 PocketBase 时不会因为 `text` 类型而明显别扭
 
-1. 至少执行一次可验证检查，如 npm run build
+四、禁止事项
+
+1. 不要改照片模式逻辑
+2. 不要改灯箱逻辑
+3. 不要改评论、点赞、作者模式逻辑
+4. 不要新增页面或模式
+5. 不要引入新的依赖
+6. 不要顺手做视觉优化或动画优化
+7. 不要重构 demo 数据之外的大块代码
+8. 不要把这轮任务扩展成“内容系统重做”
+
+五、完成后要求
+
+1. 至少执行一次可验证检查，如 `npm run build`
 2. 输出时明确汇报：
-- location 字段具体加在了哪些文件
-- demo 中新增了多少条带 location 的动态
-- 卡片里 location 放在什么位置展示
-- 修改了哪些文件
+- `text` 类型具体改了哪些文件
+- demo 中新增或调整了多少条 text 动态
+- `MomentCard` 中如何支持 text 类型
+- 是否保持了其他类型正常显示
 - 构建结果
 
-重点提醒：本轮不是做复杂定位系统，而是“增加一个轻量 location 字段，让页面更像真实朋友圈”。
+重点提醒：本轮不是“扩功能”，而是“把纯文字动态从 image 兼容方案里正式独立出来”，让内容模型更清晰，为后续视频模式和正式数据接入打基础。
