@@ -41,7 +41,7 @@ export const OwnerBar = ({ ownerAuth }: OwnerBarProps) => {
       <section className={styles.ownerPanel}>
         <div className={styles.ownerIntro}>
           <p className={styles.ownerTitle}>作者模式</p>
-          <p className={styles.ownerHint}>当前以 {ownerAuth.owner.email} 身份登录，可继续使用现有编辑与管理能力。</p>
+          <p className={styles.ownerHint}>当前以 {ownerAuth.owner.email} 登录。</p>
         </div>
         <div className={styles.ownerActions}>
           <button type="button" className={styles.ownerSecondaryButton} onClick={ownerAuth.logout}>
@@ -56,7 +56,7 @@ export const OwnerBar = ({ ownerAuth }: OwnerBarProps) => {
     <section className={styles.ownerPanel}>
       <div className={styles.ownerIntro}>
         <p className={styles.ownerTitle}>作者模式</p>
-        <p className={styles.ownerHint}>需要维护内容时，再从这里进入作者登录，不打扰日常浏览。</p>
+        <p className={styles.ownerHint}>需要维护内容时，再从这里进入。</p>
       </div>
       {isOpen ? (
         <form className={styles.ownerForm} onSubmit={handleSubmit}>

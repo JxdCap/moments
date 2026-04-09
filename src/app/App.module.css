@@ -107,7 +107,6 @@
 .profileCardHeader {
   display: flex;
   align-items: flex-start;
-  justify-content: space-between;
   gap: 14px;
 }
 
@@ -145,6 +144,19 @@
   line-height: 1.5;
 }
 
+.profileCardNote {
+  margin: 12px 0 0;
+  color: #7a8494;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.profileCardFooter {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 14px;
+}
+
 .profileClose {
   flex: 0 0 auto;
   border: 1px solid #dde2ea;
@@ -155,19 +167,12 @@
   font-size: 12px;
 }
 
-.profileCardNote {
-  margin: 14px 0 0;
-  color: #687180;
-  font-size: 13px;
-  line-height: 1.55;
-}
-
 .ownerPanel {
   display: grid;
   gap: 12px;
-  margin-top: 16px;
+  margin-top: 18px;
   border-top: 1px solid #edf0f4;
-  padding-top: 16px;
+  padding-top: 14px;
 }
 
 .ownerIntro {
@@ -242,10 +247,10 @@
   top: 0;
   z-index: 5;
   display: grid;
-  gap: 10px;
+  gap: 9px;
   border-bottom: 1px solid var(--hairline);
   background: rgb(255 255 255 / 96%);
-  padding: 10px 12px;
+  padding: 10px 12px 11px;
   backdrop-filter: blur(10px);
 }
 
@@ -296,6 +301,12 @@
   white-space: nowrap;
 }
 
+.timelineTools .toolRow .utilityButton {
+  border-color: rgb(220 225 234 / 86%);
+  background: #fbfcfd;
+  color: #7a8494;
+}
+
 .utilityButton span {
   min-width: 18px;
   border-radius: 999px;
@@ -318,11 +329,16 @@
 }
 
 .filterSummary {
+  display: grid;
+  gap: 5px;
+  min-height: 26px;
+}
+
+.summaryChips {
   display: flex;
   flex-wrap: wrap;
   gap: 7px;
-  align-items: center;
-  min-height: 22px;
+  min-height: 0;
 }
 
 .summaryChip {
@@ -338,13 +354,14 @@
 .filterHint {
   margin: 0;
   color: #8a93a3;
-  font-size: 12px;
+  font-size: 11px;
+  line-height: 1.5;
 }
 
 .filterPanel {
   display: grid;
-  gap: 12px;
-  padding: 2px 0 1px;
+  gap: 14px;
+  padding: 4px 0 2px;
 }
 
 .utilityRow {
@@ -355,7 +372,7 @@
 
 .filterGroup {
   display: grid;
-  gap: 7px;
+  gap: 8px;
 }
 
 .filterGroupHeader {
@@ -364,6 +381,10 @@
   justify-content: space-between;
   color: #8a93a3;
   font-size: 12px;
+}
+
+.filterGroupHeader span {
+  letter-spacing: 0.02em;
 }
 
 .inlineClear {
@@ -498,14 +519,14 @@
 
 .videoMode {
   display: grid;
-  gap: 12px;
+  gap: 14px;
   padding: 12px;
   background: #f6f7f9;
 }
 
 .videoHero {
   display: grid;
-  gap: 12px;
+  gap: 10px;
   padding: 14px;
   border: 1px solid #e5e8ee;
   border-radius: 14px;
@@ -514,7 +535,7 @@
 
 .videoHeroCopy {
   display: grid;
-  gap: 5px;
+  gap: 4px;
 }
 
 .videoHeroEyebrow {
@@ -528,13 +549,13 @@
 .videoHeroCopy h2 {
   margin: 0;
   color: #1f2329;
-  font-size: 22px;
+  font-size: 20px;
   line-height: 1.2;
 }
 
 .videoHeroCopy span {
-  color: #687180;
-  font-size: 13px;
+  color: #7a8494;
+  font-size: 12px;
 }
 
 .videoHeroMedia,
@@ -594,9 +615,23 @@
 .videoFilters {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
-  gap: 8px;
+  gap: 10px 14px;
+  padding: 0 2px;
+}
+
+.videoBrowseGroup,
+.videoFavoriteGroup {
+  display: grid;
+  gap: 6px;
+}
+
+.videoFilterLabel {
+  margin: 0;
+  color: #8a93a3;
+  font-size: 11px;
+  line-height: 1.4;
 }
 
 .videoBrowseSwitch {

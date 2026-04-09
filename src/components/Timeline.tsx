@@ -95,43 +95,55 @@ const TimelineControls = ({
           aria-expanded={isExpanded}
           aria-controls="timeline-filter-panel"
         >
-          {isExpanded ? '收起筛选' : '筛选'}
+          {isExpanded ? '收起' : '筛选'}
           {activeFilterCount > 0 ? <span>{activeFilterCount}</span> : null}
         </button>
       </div>
 
       <div className={styles.filterSummary} aria-label="当前筛选状态">
-        {favoritesOnly ? (
-          <button type="button" className={styles.summaryChip} onClick={onToggleFavoritesOnly}>
-            仅收藏
-          </button>
-        ) : null}
-        {activeMonth ? (
-          <button type="button" className={styles.summaryChip} onClick={onClearMonth}>
-            {activeMonth}
-          </button>
-        ) : null}
-        {activeTag ? (
-          <button type="button" className={styles.summaryChip} onClick={onClearTag}>
-            #{activeTag}
-          </button>
-        ) : null}
-        {activeFilterCount === 0 ? <p className={styles.filterHint}>按需展开收藏、归档和标签筛选。</p> : null}
+        <div className={styles.summaryChips}>
+          {favoritesOnly ? (
+            <button type="button" className={styles.summaryChip} onClick={onToggleFavoritesOnly}>
+              仅收藏
+            </button>
+          ) : null}
+          {activeMonth ? (
+            <button type="button" className={styles.summaryChip} onClick={onClearMonth}>
+              {activeMonth}
+            </button>
+          ) : null}
+          {activeTag ? (
+            <button type="button" className={styles.summaryChip} onClick={onClearTag}>
+              #{activeTag}
+            </button>
+          ) : null}
+        </div>
+        {activeFilterCount === 0 ? <p className={styles.filterHint}>可按需筛选收藏、归档和标签。</p> : null}
       </div>
 
       {isExpanded ? (
         <div id="timeline-filter-panel" className={styles.filterPanel}>
-          <div className={styles.utilityRow}>
-            <button
-              type="button"
-              className={`${styles.utilityButton} ${favoritesOnly ? styles.activeUtility : ''}`}
-              onClick={onToggleFavoritesOnly}
-              aria-pressed={favoritesOnly}
-            >
-              {favoritesOnly ? '查看全部' : '仅收藏'}
-              {favoriteCount > 0 ? <span>{favoriteCount}</span> : null}
-            </button>
-          </div>
+          <section className={styles.filterGroup}>
+            <div className={styles.filterGroupHeader}>
+              <span>收藏</span>
+              {favoritesOnly ? (
+                <button type="button" className={styles.inlineClear} onClick={onToggleFavoritesOnly}>
+                  清除
+                </button>
+              ) : null}
+            </div>
+            <div className={styles.utilityRow}>
+              <button
+                type="button"
+                className={`${styles.utilityButton} ${favoritesOnly ? styles.activeUtility : ''}`}
+                onClick={onToggleFavoritesOnly}
+                aria-pressed={favoritesOnly}
+              >
+                {favoritesOnly ? '查看全部' : '仅收藏'}
+                {favoriteCount > 0 ? <span>{favoriteCount}</span> : null}
+              </button>
+            </div>
+          </section>
 
           {archiveMonths.length > 0 ? (
             <section className={styles.filterGroup}>
@@ -251,8 +263,8 @@ const VideoView = ({
       <header className={styles.videoHero}>
         <div className={styles.videoHeroCopy}>
           <p className={styles.videoHeroEyebrow}>视频</p>
-          <h2>把会动的片段单独留出来</h2>
-          <span>{browseMode === 'recent' ? `最近 ${visiblePosts.length} 条视频动态` : `${visiblePosts.length} 条视频动态`}</span>
+          <h2>最近片段</h2>
+          <span>{browseMode === 'recent' ? `最近 ${visiblePosts.length} 条` : `共 ${visiblePosts.length} 条`}</span>
         </div>
 
         <div className={styles.videoHeroMedia}>
@@ -271,27 +283,33 @@ const VideoView = ({
       </header>
 
       <div className={styles.videoFilters} aria-label="视频模式轻筛选">
-        <div className={styles.videoBrowseSwitch}>
+        <div className={styles.videoBrowseGroup}>
+          <p className={styles.videoFilterLabel}>浏览范围</p>
+          <div className={styles.videoBrowseSwitch}>
+            <button
+              type="button"
+              className={browseMode === 'recent' ? styles.activeMode : ''}
+              onClick={() => setBrowseMode('recent')}
+            >
+              最近
+            </button>
+            <button type="button" className={browseMode === 'all' ? styles.activeMode : ''} onClick={() => setBrowseMode('all')}>
+              全部
+            </button>
+          </div>
+        </div>
+        <div className={styles.videoFavoriteGroup}>
+          <p className={styles.videoFilterLabel}>收藏</p>
           <button
             type="button"
-            className={browseMode === 'recent' ? styles.activeMode : ''}
-            onClick={() => setBrowseMode('recent')}
+            className={`${styles.utilityButton} ${favoritesOnly ? styles.activeUtility : ''}`}
+            onClick={onToggleFavoritesOnly}
+            aria-pressed={favoritesOnly}
           >
-            最近
-          </button>
-          <button type="button" className={browseMode === 'all' ? styles.activeMode : ''} onClick={() => setBrowseMode('all')}>
-            全部
+            {favoritesOnly ? '全部视频' : '仅收藏视频'}
+            {favoriteCount > 0 ? <span>{favoriteCount}</span> : null}
           </button>
         </div>
-        <button
-          type="button"
-          className={`${styles.utilityButton} ${favoritesOnly ? styles.activeUtility : ''}`}
-          onClick={onToggleFavoritesOnly}
-          aria-pressed={favoritesOnly}
-        >
-          {favoritesOnly ? '全部视频' : '仅收藏'}
-          {favoriteCount > 0 ? <span>{favoriteCount}</span> : null}
-        </button>
       </div>
 
       {listPosts.length > 0 ? (

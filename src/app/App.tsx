@@ -69,14 +69,17 @@ export const App = () => {
                   <p className={styles.profileCardBio}>只记录真实发生的小事</p>
                 </div>
               </div>
+            </div>
+
+            <p className={styles.profileCardNote}>日常记录，慢慢更新。</p>
+
+            <OwnerBar ownerAuth={ownerAuth} />
+
+            <div className={styles.profileCardFooter}>
               <button type="button" className={styles.profileClose} onClick={() => setIsProfileOpen(false)}>
                 关闭
               </button>
             </div>
-
-            <p className={styles.profileCardNote}>这是一个长期记录日常片段的个人内容页，作者入口已收纳到这里。</p>
-
-            <OwnerBar ownerAuth={ownerAuth} />
           </div>
         </div>
       ) : null}
