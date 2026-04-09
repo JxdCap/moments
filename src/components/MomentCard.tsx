@@ -194,6 +194,13 @@ export const MomentCard = ({ post, isOwner, onSave, onDelete, onTogglePinned, on
           </div>
         ) : null}
 
+        {post.location ? (
+          <div className={styles.location} aria-label={`位置：${post.location}`}>
+            <span aria-hidden="true">⌖</span>
+            <span>{post.location}</span>
+          </div>
+        ) : null}
+
         <footer className={styles.meta}>
           <span>{formatMomentTime(post.publishedAt)}</span>
           {post.source ? <span>来自 {post.source}</span> : null}

@@ -222,6 +222,21 @@
   font-size: 13px;
 }
 
+.location {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 6px;
+  color: #7b8594;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.location span:first-child {
+  font-size: 11px;
+  transform: translateY(-0.5px);
+}
+
 .meta {
   position: relative;
   display: flex;

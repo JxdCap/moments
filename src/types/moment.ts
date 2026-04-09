@@ -9,6 +9,7 @@ export type MomentPost = {
   id: string;
   type: PostType;
   content: string;
+  location?: string;
   images: MomentMedia[];
   video?: string;
   videoCover?: string;
@@ -63,6 +64,7 @@ export type PostRecord = {
   id: string;
   type: PostType;
   content: string;
+  location?: string;
   images?: string[] | MomentMedia[];
   video?: string;
   video_cover?: string;
@@ -109,6 +111,7 @@ export type PostPatch = Partial<
   Pick<
     MomentPost,
     | 'content'
+    | 'location'
     | 'tags'
     | 'isPinned'
     | 'pinnedAt'

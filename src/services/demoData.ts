@@ -24,6 +24,7 @@ export const demoPosts: MomentPost[] = [
     id: 'demo-text-only',
     type: 'image',
     content: '今天把待办收得很干净，晚一点去楼下买杯冰美式。',
+    location: '公司楼下',
     images: [],
     tags: ['日常'],
     isPinned: false,
@@ -36,6 +37,7 @@ export const demoPosts: MomentPost[] = [
     id: 'demo-single-image-vertical',
     type: 'image',
     content: '',
+    location: '上海·武康路',
     images: [
       {
         url: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&w=720&q=80',
@@ -53,6 +55,7 @@ export const demoPosts: MomentPost[] = [
     id: 'demo-text-single-horizontal',
     type: 'image',
     content: '风有点大，但云层很好看，还是值得停一下。',
+    location: '西湖边',
     images: [
       {
         url: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&w=960&q=80',
@@ -102,6 +105,7 @@ export const demoPosts: MomentPost[] = [
     id: 'demo-text-three-images',
     type: 'image',
     content: '下班路上连拍了三张，城市在傍晚总会忽然变得柔和。',
+    location: '深圳·南山',
     images: [
       { url: 'https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=640&q=80', alt: '街道黄昏' },
       { url: 'https://images.unsplash.com/photo-1493246507139-91e8fad9978e?auto=format&fit=crop&w=640&q=80', alt: '树林步道' },
@@ -135,6 +139,7 @@ export const demoPosts: MomentPost[] = [
     id: 'demo-images',
     type: 'image',
     content: '傍晚出门，光线刚好。九宫格会根据图片数量调整列数，避免把布局写死在 JSX 里。',
+    location: '深圳湾公园',
     images: [
       { url: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=500&q=80', alt: '黄昏街景' },
       { url: 'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=500&q=80', alt: '山谷' },

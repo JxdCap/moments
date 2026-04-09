@@ -35,6 +35,7 @@ const mapPostRecord = (record: PostRecord): MomentPost => ({
   id: record.id,
   type: record.type,
   content: record.content,
+  location: record.location,
   images: mapMedia(record),
   video: getFileUrl(record, record.video),
   videoCover: getFileUrl(record, record.video_cover),
@@ -61,6 +62,7 @@ const mapPostRecord = (record: PostRecord): MomentPost => ({
 
 const mapPostPatchToRecord = (patch: PostPatch) => ({
   content: patch.content,
+  location: patch.location,
   tags: patch.tags,
   is_pinned: patch.isPinned,
   pinned_at: patch.pinnedAt,
