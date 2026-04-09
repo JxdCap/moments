@@ -282,7 +282,7 @@ export const MomentCard = ({ post, isOwner, isFavorited, onSave, onDelete, onTog
               </div>
             ) : null}
 
-            {isLoading ? <p className={styles.state}>评论加载中...</p> : null}
+            {isLoading ? <p className={styles.state}>评论正在慢慢展开...</p> : null}
             {error ? <p className={styles.state}>{error}</p> : null}
             {commentNotice ? <p className={`${styles.state} ${styles.success}`}>{commentNotice}</p> : null}
 
@@ -313,7 +313,7 @@ export const MomentCard = ({ post, isOwner, isFavorited, onSave, onDelete, onTog
               <CommentForm
                 onSubmit={submit}
                 onSuccess={(comment) => {
-                  setCommentNotice(comment.status === 'approved' ? '评论已贴上来。' : '收到，审核后会在这里出现。');
+                  setCommentNotice(comment.status === 'approved' ? '评论已经贴在这里。' : '已经收到，审核后会出现在这里。');
                   setIsCommenting(false);
                 }}
               />

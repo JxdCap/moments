@@ -1,15 +1,26 @@
 :root {
-  font-family: "Noto Serif SC", "Source Han Serif SC", "Songti SC", "STSong", "PT Serif", serif;
-  color: #333333;
-  background: #fcfcfc;
+  font-family: "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  color: #4f4942;
+  background: #ffffff;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
-  --brand-name: #333333;
-  --hairline: #eeeeee;
-  --muted: #888888;
-  --wechat-link: #333333;
-  --tap-highlight: rgb(0 0 0 / 2%);
+  --bg-page: #ffffff;
+  --bg-elevated: #ffffff;
+  --bg-soft: #f7f6f3;
+  --bg-paper: rgb(255 255 255 / 100%);
+  --text-strong: #2f2a24;
+  --text-body: #4f4942;
+  --text-muted: #7b746c;
+  --line-soft: #ddd5ca;
+  --line-strong: #c4baad;
+  --accent-quiet: #8b8175;
+  --accent-moss: #7d8574;
+  --brand-name: var(--text-strong);
+  --hairline: var(--line-soft);
+  --muted: var(--text-muted);
+  --wechat-link: var(--text-strong);
+  --tap-highlight: rgb(47 42 36 / 3%);
 }
 
 * {
@@ -20,6 +31,7 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+  background: var(--bg-page);
 }
 
 body,
@@ -35,6 +47,12 @@ textarea {
   font: inherit;
 }
 
+body,
+input,
+textarea {
+  color: var(--text-body);
+}
+
 button {
   cursor: pointer;
 }
@@ -46,4 +64,17 @@ button:disabled {
 
 a {
   color: inherit;
+}
+
+h1,
+h2,
+h3,
+.display-serif {
+  font-family: "Noto Serif SC", "Source Han Serif SC", "Songti SC", "STSong", serif;
+  color: var(--text-strong);
+  font-weight: 500;
+}
+
+::selection {
+  background: rgb(196 186 173 / 38%);
 }

@@ -153,7 +153,7 @@ const AlbumView = ({ images }: { images: AlbumImage[] }) => {
   const lightboxImages = useMemo(() => images.map((item) => item.image), [images]);
 
   if (images.length === 0) {
-    return <div className={styles.state}>这个范围里还没有照片。</div>;
+    return <div className={styles.state}>这个范围里还没有留下照片。</div>;
   }
 
   // 简单的两列瀑布流分配
@@ -222,7 +222,7 @@ const VideoView = ({
   const [activeVideoId, setActiveVideoId] = useState<string | null>(null);
 
   if (posts.length === 0) {
-    return <div className={styles.state}>这个范围里还没有视频。</div>;
+    return <div className={styles.state}>这个范围里还没有留下视频。</div>;
   }
 
   return (
@@ -369,10 +369,10 @@ export const Timeline = ({ postsState, isOwner }: TimelineProps) => {
     });
   };
 
-  const emptyMessage = favoritesOnly ? '收藏夹里还没有这个范围的动态。' : '这个筛选范围里还没有动态。';
+  const emptyMessage = favoritesOnly ? '收藏夹里暂时还没有这一段记录。' : '这一段筛选里还没有新的记录。';
 
   if (postsState.isLoading) {
-    return <div className={styles.state}>正在加载朋友圈...</div>;
+    return <div className={styles.state}>正在整理这段时间的记录...</div>;
   }
 
   if (postsState.error) {
@@ -387,7 +387,7 @@ export const Timeline = ({ postsState, isOwner }: TimelineProps) => {
   }
 
   if (postsState.posts.length === 0) {
-    return <div className={styles.state}>还没有动态。</div>;
+    return <div className={styles.state}>这里还没有留下记录。</div>;
   }
 
   return (
