@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState, useRef, useCallback } from 'react';
-import { Play } from 'lucide-react';
+import { Play, ListFilter } from 'lucide-react';
 import { Lightbox } from './Lightbox';
 import { MomentCard } from './MomentCard';
 import type { usePosts } from '../hooks/usePosts';
@@ -65,19 +65,13 @@ const TimelineControls = ({
   onClearMonth: () => void;
   onToggleFavoritesOnly: () => void;
 }) => {
-  const [isExpanded, setIsExpanded] = useState(Boolean(activeTag || activeMonth || favoritesOnly));
+  const [isExpanded, setIsExpanded] = useState(false);
   const activeFilterCount = Number(favoritesOnly) + Number(Boolean(activeMonth)) + Number(Boolean(activeTag));
-
-  useEffect(() => {
-    if (activeTag || activeMonth || favoritesOnly) {
-      setIsExpanded(true);
-    }
-  }, [activeMonth, activeTag, favoritesOnly]);
 
   return (
     <div className={styles.timelineTools}>
       <div className={styles.toolRow}>
-        <div className={styles.modeSwitch} aria-label="浏览模式">
+        <div className={styles.modeTabs} aria-label="浏览模式">
           <button type="button" className={viewMode === 'timeline' ? styles.activeMode : ''} onClick={() => onChangeMode('timeline')}>
             全部
           </button>
@@ -91,111 +85,63 @@ const TimelineControls = ({
 
         <button
           type="button"
-          className={`${styles.utilityButton} ${activeFilterCount > 0 ? styles.activeUtility : ''}`}
+          className={`${styles.filterTrigger} ${activeFilterCount > 0 ? styles.activeTrigger : ''}`}
           onClick={() => setIsExpanded((current) => !current)}
           aria-expanded={isExpanded}
-          aria-controls="timeline-filter-panel"
         >
-          {isExpanded ? '收起' : '筛选'}
-          {activeFilterCount > 0 ? <span>{activeFilterCount}</span> : null}
+          <div className={styles.filterIconWrap}>
+            <ListFilter size={18} strokeWidth={1.5} />
+            {activeFilterCount > 0 ? <span className={styles.filterDot} /> : null}
+          </div>
         </button>
-      </div>
-
-      <div className={styles.filterSummary} aria-label="当前筛选状态">
-        <div className={styles.summaryChips}>
-          {favoritesOnly ? (
-            <button type="button" className={styles.summaryChip} onClick={onToggleFavoritesOnly}>
-              仅收藏
-            </button>
-          ) : null}
-          {activeMonth ? (
-            <button type="button" className={styles.summaryChip} onClick={onClearMonth}>
-              {activeMonth}
-            </button>
-          ) : null}
-          {activeTag ? (
-            <button type="button" className={styles.summaryChip} onClick={onClearTag}>
-              #{activeTag}
-            </button>
-          ) : null}
-        </div>
-        {activeFilterCount === 0 ? <p className={styles.filterHint}>可按需筛选收藏、归档和标签。</p> : null}
       </div>
 
       {isExpanded ? (
         <div id="timeline-filter-panel" className={styles.filterPanel}>
-          <section className={styles.filterGroup}>
-            <div className={styles.filterGroupHeader}>
-              <span>收藏</span>
-              {favoritesOnly ? (
-                <button type="button" className={styles.inlineClear} onClick={onToggleFavoritesOnly}>
-                  清除
-                </button>
-              ) : null}
-            </div>
-            <div className={styles.utilityRow}>
-              <button
-                type="button"
-                className={`${styles.utilityButton} ${favoritesOnly ? styles.activeUtility : ''}`}
+          <div className={styles.filterSection}>
+            <span className={styles.filterLabel}>类型</span>
+            <div className={styles.filterOptions}>
+              <button 
+                type="button" 
+                className={`${styles.filterChip} ${favoritesOnly ? styles.activeChip : ''}`}
                 onClick={onToggleFavoritesOnly}
-                aria-pressed={favoritesOnly}
               >
-                {favoritesOnly ? '查看全部' : '仅收藏'}
-                {favoriteCount > 0 ? <span>{favoriteCount}</span> : null}
+                仅收藏
               </button>
             </div>
-          </section>
-
-          {archiveMonths.length > 0 ? (
-            <section className={styles.filterGroup}>
-              <div className={styles.filterGroupHeader}>
-                <span>归档</span>
-                {activeMonth ? (
-                  <button type="button" className={styles.inlineClear} onClick={onClearMonth}>
-                    清除
-                  </button>
-                ) : null}
-              </div>
-              <div className={styles.archiveFilter} aria-label="按月份归档筛选">
-                <button type="button" className={!activeMonth ? styles.activeTag : ''} onClick={onClearMonth}>
-                  全部月份
+          </div>
+          
+          {archiveMonths.length > 0 && (
+            <div className={styles.filterSection}>
+              <span className={styles.filterLabel}>月份</span>
+              <div className={styles.filterOptions}>
+                <button type="button" className={`${styles.filterChip} ${!activeMonth ? styles.activeChip : ''}`} onClick={onClearMonth}>
+                  全部
                 </button>
-                {archiveMonths.map((month) => (
-                  <button
-                    key={month}
-                    type="button"
-                    className={activeMonth === month ? styles.activeTag : ''}
-                    onClick={() => onSelectMonth(month)}
-                  >
+                {archiveMonths.map(month => (
+                  <button key={month} type="button" className={`${styles.filterChip} ${activeMonth === month ? styles.activeChip : ''}`} onClick={() => onSelectMonth(month)}>
                     {month}
                   </button>
                 ))}
               </div>
-            </section>
-          ) : null}
+            </div>
+          )}
 
-          {tags.length > 0 ? (
-            <section className={styles.filterGroup}>
-              <div className={styles.filterGroupHeader}>
-                <span>标签</span>
-                {activeTag ? (
-                  <button type="button" className={styles.inlineClear} onClick={onClearTag}>
-                    清除
-                  </button>
-                ) : null}
-              </div>
-              <div className={styles.tagFilter} aria-label="按标签筛选">
-                <button type="button" className={!activeTag ? styles.activeTag : ''} onClick={onClearTag}>
-                  全部标签
+          {tags.length > 0 && (
+            <div className={styles.filterSection}>
+              <span className={styles.filterLabel}>标签</span>
+              <div className={styles.filterOptions}>
+                <button type="button" className={`${styles.filterChip} ${!activeTag ? styles.activeChip : ''}`} onClick={onClearTag}>
+                  全部
                 </button>
-                {tags.map((tag) => (
-                  <button key={tag} type="button" className={activeTag === tag ? styles.activeTag : ''} onClick={() => onSelectTag(tag)}>
+                {tags.map(tag => (
+                  <button key={tag} type="button" className={`${styles.filterChip} ${activeTag === tag ? styles.activeChip : ''}`} onClick={() => onSelectTag(tag)}>
                     #{tag}
                   </button>
                 ))}
               </div>
-            </section>
-          ) : null}
+            </div>
+          )}
         </div>
       ) : null}
     </div>
@@ -210,25 +156,55 @@ const AlbumView = ({ images }: { images: AlbumImage[] }) => {
     return <div className={styles.state}>这个范围里还没有照片。</div>;
   }
 
+  // 简单的两列瀑布流分配
+  const column1: AlbumImage[] = [];
+  const column2: AlbumImage[] = [];
+  images.forEach((item, index) => {
+    if (index % 2 === 0) column1.push(item);
+    else column2.push(item);
+  });
+
   return (
-    <section className={styles.album} aria-label="照片模式">
-      <div className={styles.albumHeader}>
-        <p>照片模式</p>
-        <span>{images.length} 张</span>
-      </div>
-      <div className={styles.albumGrid}>
-        {images.map((item, index) => (
-          <button
-            key={`${item.post.id}-${item.image.url}-${item.imageIndex}`}
-            type="button"
-            className={styles.albumItem}
-            onClick={() => setPreviewIndex(index)}
-            aria-label={`查看 ${formatMomentTime(item.post.publishedAt)} 的第 ${item.imageIndex + 1} 张照片`}
-          >
-            <img src={item.image.url} alt={item.image.alt ?? ''} loading="lazy" />
-            <span>{formatMomentTime(item.post.publishedAt)}</span>
-          </button>
-        ))}
+    <section className={styles.album} aria-label="照片画廊">
+      <div className={styles.masonryGrid}>
+        <div className={styles.masonryColumn}>
+          {column1.map((item) => {
+            const originalIndex = images.indexOf(item);
+            return (
+              <button
+                key={`${item.post.id}-${item.image.url}-${item.imageIndex}`}
+                type="button"
+                className={styles.masonryItem}
+                onClick={() => setPreviewIndex(originalIndex)}
+                aria-label={`查看 ${formatMomentTime(item.post.publishedAt)} 的照片`}
+              >
+                <img src={item.image.thumbUrl || item.image.url} alt={item.image.alt ?? ''} loading="lazy" />
+                <div className={styles.masonryOverlay}>
+                  <span>{formatMomentTime(item.post.publishedAt)}</span>
+                </div>
+              </button>
+            );
+          })}
+        </div>
+        <div className={styles.masonryColumn}>
+          {column2.map((item) => {
+            const originalIndex = images.indexOf(item);
+            return (
+              <button
+                key={`${item.post.id}-${item.image.url}-${item.imageIndex}`}
+                type="button"
+                className={styles.masonryItem}
+                onClick={() => setPreviewIndex(originalIndex)}
+                aria-label={`查看 ${formatMomentTime(item.post.publishedAt)} 的照片`}
+              >
+                <img src={item.image.thumbUrl || item.image.url} alt={item.image.alt ?? ''} loading="lazy" />
+                <div className={styles.masonryOverlay}>
+                  <span>{formatMomentTime(item.post.publishedAt)}</span>
+                </div>
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       {previewIndex !== null ? (
@@ -240,119 +216,58 @@ const AlbumView = ({ images }: { images: AlbumImage[] }) => {
 
 const VideoView = ({
   posts,
-  favoritesOnly,
-  favoriteCount,
-  onToggleFavoritesOnly,
 }: {
   posts: MomentPost[];
-  favoritesOnly: boolean;
-  favoriteCount: number;
-  onToggleFavoritesOnly: () => void;
 }) => {
   const [activeVideoId, setActiveVideoId] = useState<string | null>(null);
-  const [browseMode, setBrowseMode] = useState<'recent' | 'all'>('recent');
-  const visiblePosts = useMemo(() => (browseMode === 'recent' ? posts.slice(0, 6) : posts), [browseMode, posts]);
-  const heroPost = visiblePosts[0];
-  const listPosts = visiblePosts.slice(1);
 
-  if (!heroPost) {
+  if (posts.length === 0) {
     return <div className={styles.state}>这个范围里还没有视频。</div>;
   }
 
   return (
-    <section className={styles.videoMode} aria-label="视频模式">
-      <header className={styles.videoHero}>
-        <div className={styles.videoHeroCopy}>
-          <p className={styles.videoHeroEyebrow}>视频</p>
-          <h2>最近片段</h2>
-          <span>{browseMode === 'recent' ? `最近 ${visiblePosts.length} 条` : `共 ${visiblePosts.length} 条`}</span>
-        </div>
+    <section className={styles.videoMode} aria-label="电影流模式">
+      <div className={styles.cinematicFeed}>
+        {posts.map((post) => {
+          const isPlaying = activeVideoId === post.id;
 
-        <div className={styles.videoHeroMedia}>
-          {activeVideoId === heroPost.id && heroPost.video ? (
-            <video className={styles.videoHeroPlayer} src={heroPost.video} controls autoPlay poster={heroPost.videoCover}>
-              当前浏览器不支持视频播放。
-            </video>
-          ) : (
-            <button type="button" className={styles.videoHeroPreview} onClick={() => setActiveVideoId(heroPost.id)}>
-              {heroPost.videoCover ? <img src={heroPost.videoCover} alt="" loading="lazy" /> : null}
-              <span className={styles.videoHeroPlay}><Play size={36} fill="currentColor" strokeWidth={1} /></span>
-              {heroPost.videoDuration ? <span className={styles.videoHeroDuration}>{formatDuration(heroPost.videoDuration)}</span> : null}
-            </button>
-          )}
-        </div>
-      </header>
+          return (
+            <article key={post.id} className={styles.cinematicCard}>
+              <div className={styles.cinematicMedia}>
+                {isPlaying && post.video ? (
+                  <video className={styles.cinematicPlayer} src={post.video} controls autoPlay poster={post.videoCover}>
+                    当前浏览器不支持视频播放。
+                  </video>
+                ) : (
+                  <button type="button" className={styles.cinematicPreview} onClick={() => setActiveVideoId(post.id)}>
+                    {post.videoCover ? <img src={post.videoCover} alt="" loading="lazy" /> : null}
+                    <span className={styles.cinematicPlay}><Play size={48} fill="currentColor" strokeWidth={1} /></span>
+                    {post.videoDuration ? <span className={styles.cinematicDuration}>{formatDuration(post.videoDuration)}</span> : null}
+                  </button>
+                )}
+              </div>
 
-      <div className={styles.videoFilters} aria-label="视频模式轻筛选">
-        <div className={styles.videoBrowseGroup}>
-          <p className={styles.videoFilterLabel}>浏览范围</p>
-          <div className={styles.videoBrowseSwitch}>
-            <button
-              type="button"
-              className={browseMode === 'recent' ? styles.activeMode : ''}
-              onClick={() => setBrowseMode('recent')}
-            >
-              最近
-            </button>
-            <button type="button" className={browseMode === 'all' ? styles.activeMode : ''} onClick={() => setBrowseMode('all')}>
-              全部
-            </button>
-          </div>
-        </div>
-        <div className={styles.videoFavoriteGroup}>
-          <p className={styles.videoFilterLabel}>收藏</p>
-          <button
-            type="button"
-            className={`${styles.utilityButton} ${favoritesOnly ? styles.activeUtility : ''}`}
-            onClick={onToggleFavoritesOnly}
-            aria-pressed={favoritesOnly}
-          >
-            {favoritesOnly ? '全部视频' : '仅收藏视频'}
-            {favoriteCount > 0 ? <span>{favoriteCount}</span> : null}
-          </button>
-        </div>
-      </div>
-
-      {listPosts.length > 0 ? (
-        <div className={styles.videoList}>
-          {listPosts.map((post) => {
-            const isPlaying = activeVideoId === post.id;
-
-            return (
-              <article key={post.id} className={styles.videoCard}>
-                <div className={styles.videoCardMedia}>
-                  {isPlaying && post.video ? (
-                    <video className={styles.videoCardPlayer} src={post.video} controls autoPlay poster={post.videoCover}>
-                      当前浏览器不支持视频播放。
-                    </video>
-                  ) : (
-                    <button type="button" className={styles.videoCardPreview} onClick={() => setActiveVideoId(post.id)}>
-                      {post.videoCover ? <img src={post.videoCover} alt="" loading="lazy" /> : null}
-                      <span className={styles.videoCardPlay}><Play size={32} fill="currentColor" strokeWidth={1} /></span>
-                      {post.videoDuration ? <span className={styles.videoCardDuration}>{formatDuration(post.videoDuration)}</span> : null}
-                    </button>
-                  )}
-                </div>
-
-                <div className={styles.videoCardBody}>
-                  {post.content ? <p className={styles.videoCardContent}>{post.content}</p> : null}
-                  <div className={styles.videoCardMeta}>
-                    <span>{formatMomentTime(post.publishedAt)}</span>
-                    {post.location ? <span>{post.location}</span> : null}
+              <div className={styles.cinematicBody}>
+                <div className={styles.cinematicTop}>
+                  <div className={styles.cinematicAuthorWrap}>
+                    <h2 className={styles.cinematicAuthor}>站长</h2>
+                    <span className={styles.cinematicTimestamp}>· {formatMomentTime(post.publishedAt)}</span>
                   </div>
-                  {post.tags.length > 0 ? (
-                    <div className={styles.videoCardTags}>
-                      {post.tags.map((tag) => (
-                        <span key={tag}>#{tag}</span>
-                      ))}
-                    </div>
-                  ) : null}
+                  {post.location ? <span className={styles.cinematicLocation}>{post.location}</span> : null}
                 </div>
-              </article>
-            );
-          })}
-        </div>
-      ) : null}
+                {post.content ? <p className={styles.cinematicContent}>{post.content}</p> : null}
+                {post.tags.length > 0 ? (
+                  <div className={styles.cinematicTags}>
+                    {post.tags.map((tag) => (
+                      <span key={tag} className={styles.cinematicTag}>#{tag}</span>
+                    ))}
+                  </div>
+                ) : null}
+              </div>
+            </article>
+          );
+        })}
+      </div>
     </section>
   );
 };
@@ -496,12 +411,7 @@ export const Timeline = ({ postsState, isOwner }: TimelineProps) => {
       {viewMode === 'photos' ? (
         <AlbumView images={albumImages} />
       ) : viewMode === 'videos' ? (
-        <VideoView
-          posts={videoPosts}
-          favoritesOnly={favoritesOnly}
-          favoriteCount={favoriteVideoCount}
-          onToggleFavoritesOnly={() => setFavoritesOnly((current) => !current)}
-        />
+        <VideoView posts={videoPosts} />
       ) : filteredPosts.length > 0 ? (
         <div className={styles.timeline}>
           {filteredPosts.map((post) => (

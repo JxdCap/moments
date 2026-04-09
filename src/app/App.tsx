@@ -28,29 +28,27 @@ export const App = () => {
   return (
     <main className={styles.shell}>
       <section className={styles.phoneFrame} aria-label="个人朋友圈时间流">
-        <header className={styles.cover}>
-          <div className={styles.coverShade}>
-            <div className={styles.profile}>
-              <div>
-                <p className={styles.profileName}>站长的朋友圈</p>
-                <p className={styles.profileBio}>只记录真实发生的小事</p>
+        <header className={styles.cover} />
+        <div className={styles.profileSection}>
+          <div className={styles.profileInfo}>
+            <button
+              type="button"
+              className={styles.avatarButton}
+              onClick={() => setIsProfileOpen(true)}
+              aria-label="打开个人资料与作者入口"
+              aria-haspopup="dialog"
+              aria-expanded={isProfileOpen}
+            >
+              <div className={styles.avatar} aria-hidden="true">
+                朋
               </div>
-              <button
-                type="button"
-                className={styles.avatarButton}
-                onClick={() => setIsProfileOpen(true)}
-                aria-label="打开个人资料与作者入口"
-                aria-haspopup="dialog"
-                aria-expanded={isProfileOpen}
-              >
-                <div className={styles.avatar} aria-hidden="true">
-                  朋
-                </div>
-                <span className={styles.avatarHint}>资料</span>
-              </button>
+            </button>
+            <div className={styles.profileText}>
+              <h1 className={styles.profileName}>站长的朋友圈</h1>
+              <p className={styles.profileBio}>只记录真实发生的小事</p>
             </div>
           </div>
-        </header>
+        </div>
 
         <Timeline postsState={posts} isOwner={ownerAuth.isOwner} />
       </section>

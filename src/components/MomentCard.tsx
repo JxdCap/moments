@@ -1,5 +1,5 @@
 import { CSSProperties, useEffect, useState } from 'react';
-import { Heart, Star, MapPin, MessageCircle, MoreHorizontal, Play, FileText, Music } from 'lucide-react';
+import { Heart, Star, MapPin, MessageCircle, MoreHorizontal, Play, FileText, Music, Pin } from 'lucide-react';
 import { CommentForm } from './CommentForm';
 import { EditPostDialog } from './EditPostDialog';
 import { Lightbox } from './Lightbox';
@@ -187,8 +187,16 @@ export const MomentCard = ({ post, isOwner, isFavorited, onSave, onDelete, onTog
       </div>
       <div className={styles.body}>
         <div className={styles.topLine}>
-          <h2 className={styles.author}>站长</h2>
-          {post.isPinned ? <span className={styles.pinned}>置顶</span> : null}
+          <div className={styles.authorWrap}>
+            <h2 className={styles.author}>站长</h2>
+            <span className={styles.timestamp}>· {formatMomentTime(post.publishedAt)}</span>
+          </div>
+          {post.isPinned ? (
+            <span className={styles.pinned}>
+              <Pin size={12} strokeWidth={2} aria-hidden="true" />
+              置顶
+            </span>
+          ) : null}
           {isFavorited ? <span className={styles.favoriteMark}>已收藏</span> : null}
         </div>
 
@@ -202,7 +210,7 @@ export const MomentCard = ({ post, isOwner, isFavorited, onSave, onDelete, onTog
         {post.tags.length > 0 ? (
           <div className={styles.tags}>
             {post.tags.map((tag) => (
-              <span key={tag}>#{tag}</span>
+              <span key={tag} className={styles.tag}>#{tag}</span>
             ))}
           </div>
         ) : null}
@@ -215,7 +223,6 @@ export const MomentCard = ({ post, isOwner, isFavorited, onSave, onDelete, onTog
         ) : null}
 
         <footer className={styles.meta}>
-          <span>{formatMomentTime(post.publishedAt)}</span>
           {post.source ? <span>来自 {post.source}</span> : null}
           <div className={styles.actionWrap}>
             <button
