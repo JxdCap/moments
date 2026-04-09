@@ -2,6 +2,7 @@ export type PostType = 'text' | 'image' | 'video' | 'article' | 'music';
 
 export type MomentMedia = {
   url: string;
+  thumbUrl?: string;
   alt?: string;
 };
 

@@ -2,7 +2,7 @@ import { pb } from './pocketbase';
 import { demoPosts } from './demoData';
 import type { MomentMedia, MomentPost, PostPatch, PostRecord } from '../types/moment';
 
-const getFileUrl = (record: PostRecord, value?: string) => {
+const getFileUrl = (record: PostRecord, value?: string, thumb?: string) => {
   if (!value) {
     return undefined;
   }
@@ -11,7 +11,7 @@ const getFileUrl = (record: PostRecord, value?: string) => {
     return value;
   }
 
-  return pb?.files.getUrl(record, value) ?? value;
+  return pb?.files.getUrl(record, value, thumb ? { thumb } : undefined) ?? value;
 };
 
 const mapMedia = (record: PostRecord): MomentMedia[] => {
@@ -26,6 +26,7 @@ const mapMedia = (record: PostRecord): MomentMedia[] => {
 
     return {
       url: getFileUrl(record, item) ?? item,
+      thumbUrl: getFileUrl(record, item, '400x400') ?? item,
       alt: record.content.slice(0, 30),
     };
   });
@@ -90,16 +91,26 @@ const sortPosts = (posts: MomentPost[]) =>
 
 let localPosts = sortPosts(demoPosts);
 
-export const listPosts = async () => {
+export const listPosts = async (page = 1, perPage = 10) => {
   if (!pb) {
-    return localPosts;
+    const start = (page - 1) * perPage;
+    const items = localPosts.slice(start, start + perPage);
+    return {
+      items,
+      page,
+      totalPages: Math.ceil(localPosts.length / perPage),
+    };
   }
 
-  const records = await pb.collection('posts').getFullList<PostRecord>({
+  const result = await pb.collection('posts').getList<PostRecord>(page, perPage, {
     sort: '-is_pinned,-pinned_at,-published_at',
   });
 
-  return sortPosts(records.map(mapPostRecord));
+  return {
+    items: sortPosts(result.items.map(mapPostRecord)),
+    page: result.page,
+    totalPages: result.totalPages,
+  };
 };
 
 export const updatePost = async (postId: string, patch: PostPatch) => {

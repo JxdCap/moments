@@ -87,11 +87,22 @@
   align-items: flex-end;
 }
 
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
 .profileBackdrop {
   position: absolute;
   inset: 0;
   border: 0;
   background: rgb(10 14 20 / 40%);
+  animation: fadeIn 0.2s ease-out;
 }
 
 .profileCard {
@@ -102,6 +113,7 @@
   background: #ffffff;
   padding: 18px 16px calc(20px + env(safe-area-inset-bottom));
   box-shadow: 0 -14px 40px rgb(15 23 42 / 16%);
+  animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .profileCardHeader {

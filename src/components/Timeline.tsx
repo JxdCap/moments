@@ -501,6 +501,14 @@ export const Timeline = ({ postsState, isOwner }: TimelineProps) => {
       ) : (
         <div className={styles.state}>{emptyMessage}</div>
       )}
+
+      {postsState.hasMore && (
+        <div className={styles.state}>
+          <button type="button" onClick={postsState.loadMore} disabled={postsState.isLoadingMore}>
+            {postsState.isLoadingMore ? '加载中...' : '加载更多'}
+          </button>
+        </div>
+      )}
     </>
   );
 };

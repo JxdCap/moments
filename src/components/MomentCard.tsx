@@ -54,7 +54,7 @@ const MediaGrid = ({ images, onPreview }: { images: MomentMedia[]; onPreview: (i
           onClick={() => onPreview(index)}
           aria-label={`查看第 ${index + 1} 张图片`}
         >
-          <img src={image.url} alt={image.alt ?? ''} loading="lazy" />
+          <img src={image.thumbUrl || image.url} alt={image.alt ?? ''} loading="lazy" />
         </button>
       ))}
     </div>
